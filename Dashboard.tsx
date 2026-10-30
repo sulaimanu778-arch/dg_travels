@@ -61,7 +61,6 @@ export default function Dashboard() {
 
   return (
     <section style={{ maxWidth: 640, margin: '0 auto' }}>
-      {/* Welcome banner */}
       <div style={{
         background: `linear-gradient(135deg, ${NAVY}, #1b4a5a)`,
         color: '#fff', borderRadius: 20, padding: '1.4rem',
@@ -86,9 +85,7 @@ export default function Dashboard() {
           <div style={{ ...iconBox, background: '#dcfce7' }}>🚌</div>
           <div>
             <div style={{ fontSize: 20, fontWeight: 700 }}>Passenger travel</div>
-            <div style={{ color: '#6b7280', marginTop: 2 }}>
-              Book a seat out of Katsina
-            </div>
+            <div style={{ color: '#6b7280', marginTop: 2 }}>Book a seat out of Katsina</div>
           </div>
         </Link>
 
@@ -101,7 +98,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Account */}
       <div style={{
         marginTop: 22, padding: '1rem 1.2rem', background: '#fff',
         border: '1px solid #e5e7eb', borderRadius: 16,
