@@ -32,7 +32,13 @@ export default function App() {
     <>
       <header className="bar">
         <Link to={session ? '/dashboard' : '/'} className="brand">DG Travels</Link>
-        {!session && (
+        {session ? (
+          pathname !== '/dashboard' && (
+            <nav>
+              <Link to="/dashboard">← Dashboard</Link>
+            </nav>
+          )
+        ) : (
           <nav>
             <Link to="/">Passenger travel</Link>
             <span className="soon" title="Coming next">Parcel delivery</span>
