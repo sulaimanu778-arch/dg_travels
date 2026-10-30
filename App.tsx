@@ -7,6 +7,7 @@ import Search from './Search'
 import Book from './Book'
 import Auth from './Auth'
 import Reset from './Reset'
+import VerifyOtp from './VerifyOtp'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/trip/:id" element={<Book session={session} />} />
           <Route path="/login" element={<Auth />} />
           <Route path="/reset" element={<Reset />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
