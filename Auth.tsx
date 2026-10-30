@@ -49,7 +49,7 @@ export default function Auth() {
         }
       } else {
         sessionStorage.removeItem('dg_pending_email')
-        nav('/', { replace: true })
+        nav('/dashboard', { replace: true })
       }
 
     } else if (mode === 'signup') {
@@ -79,7 +79,7 @@ export default function Auth() {
           setError(error.message)
         }
       } else if (data.session) {
-        nav('/', { replace: true })
+        nav('/dashboard', { replace: true })
       } else {
         // Supabase has emailed a 6-digit code. Go to the code page.
         sessionStorage.setItem('dg_pending_email', cleanEmail)
@@ -117,44 +117,4 @@ export default function Auth() {
             <label>Password
               <input type={showPw ? 'text' : 'password'} required value={password}
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                onChange={e => setPassword(e.target.value)} />
-            </label>
-            <button type="button" className="link" onClick={() => setShowPw(!showPw)}>
-              {showPw ? 'Hide password' : 'Show password'}
-            </button>
-          </>
-        )}
-
-        {mode === 'signup' && (
-          <>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0' }}>
-              {checks.map(c => (
-                <li key={c.label} style={{ color: c.ok ? '#15803d' : '#6b7280' }}>
-                  {c.ok ? '✓' : '○'} {c.label}
-                </li>
-              ))}
-            </ul>
-            <label>Confirm password
-              <input type={showPw ? 'text' : 'password'} required value={confirm}
-                autoComplete="new-password" onChange={e => setConfirm(e.target.value)} />
-            </label>
-            {confirm && !match && <p className="error">Passwords do not match.</p>}
-          </>
-        )}
-
-        {error && <p className="error">{error}</p>}
-        {msg && <p className="notice">{msg}</p>}
-
-        <button className="primary" disabled={busy || (mode === 'signup' && !canSignup)}>
-          {mode === 'login' ? 'Log in' : mode === 'signup' ? 'Create account' : 'Send reset link'}
-        </button>
-
-        <p>
-          {mode !== 'login' && <button type="button" className="link" onClick={() => setMode('login')}>I have an account</button>}
-          {mode !== 'signup' && <button type="button" className="link" onClick={() => setMode('signup')}>Create an account</button>}
-          {mode !== 'forgot' && <button type="button" className="link" onClick={() => setMode('forgot')}>Forgot password</button>}
-        </p>
-      </form>
-    </section>
-  )
-    }
+                onChange={
