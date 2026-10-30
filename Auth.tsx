@@ -40,7 +40,15 @@ export default function Auth() {
 
     if (mode === 'login') {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) setError('Wrong email or password. Please try again.'); else nav(-1)
+      if (error) {
+        if (error.message.toLowerCase().includes('not confirmed')) {
+          setError('Your email is not verified yet. Please verify it with the 6-digit code.')
+          sessionStorage.setItem('dg_pending_email', email.trim())
+          nav('/verify-otp', { state: { email: email.trim() } })
+        } else {
+          setError('Wrong email or password. Please try again.')
+        }
+      } else nav(-1)
 
     } else if (mode === 'signup') {
       if (!canSignup) { setBusy(false); return }
@@ -51,8 +59,9 @@ export default function Auth() {
         setBusy(false)
         return
       }
+      const cleanEmail = email.trim()
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: cleanEmail,
         password,
         options: {
           emailRedirectTo: window.location.origin,
@@ -67,8 +76,13 @@ export default function Auth() {
         } else {
           setError(error.message)
         }
-      } else if (data.session) nav(-1)
-      else setMsg('Account created. We sent a confirmation link to your email. Open it, then log in.')
+      } else if (data.session) {
+        nav(-1)
+      } else {
+        // Supabase has emailed a 6-digit code. Go to the code page.
+        sessionStorage.setItem('dg_pending_email', cleanEmail)
+        nav('/verify-otp', { state: { email: cleanEmail } })
+      }
 
     } else {
       const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset' })
@@ -141,4 +155,4 @@ export default function Auth() {
       </form>
     </section>
   )
-        }
+}
