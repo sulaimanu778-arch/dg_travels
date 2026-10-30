@@ -1,0 +1,51 @@
+import { useEffect, useState } from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
+import type { Session } from '@supabase/supabase-js'
+import { configured, supabase } from './supabase'
+import Home from './Home'
+import Search from './Search'
+import Book from './Book'
+import Auth from './Auth'
+import Reset from './Reset'
+
+export default function App() {
+  const [session, setSession] = useState<Session | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
+    return () => data.subscription.unsubscribe()
+  }, [])
+
+  return (
+    <>
+      <header className="bar">
+        <Link to="/" className="brand">DG Travels</Link>
+        <nav>
+          <Link to="/">Passenger travel</Link>
+          <span className="soon" title="Coming next">Parcel delivery</span>
+          {session ? (
+            <button className="link" onClick={() => supabase.auth.signOut()}>Log out</button>
+          ) : (
+            <Link to="/login">Log in</Link>
+          )}
+        </nav>
+      </header>
+      <main>
+        {!configured && (
+          <p className="notice">
+            Setup needed: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file, then restart.
+          </p>
+        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/trip/:id" element={<Book session={session} />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/reset" element={<Reset />} />
+          <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
+        </Routes>
+      </main>
+    </>
+  )
+}
