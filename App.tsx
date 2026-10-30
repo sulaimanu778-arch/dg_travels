@@ -31,37 +31,9 @@ export default function App() {
   return (
     <>
       <header className="bar">
-        <Link to="/" className="brand">DG Travels</Link>
+        <Link to={session ? '/dashboard' : '/'} className="brand">DG Travels</Link>
         <nav>
           <Link to="/">Passenger travel</Link>
           <span className="soon" title="Coming next">Parcel delivery</span>
-          {session ? (
-            <>
-              <Link to="/dashboard">Dashboard</Link>
-              <button className="link" onClick={() => supabase.auth.signOut()}>Log out</button>
-            </>
-          ) : (
-            <Link to="/login">Log in</Link>
-          )}
+          {!session && <Link to="/login">Log in</Link>}
         </nav>
-      </header>
-      <main>
-        {!configured && (
-          <p className="notice">
-            Setup needed: add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file, then restart.
-          </p>
-        )}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/trip/:id" element={<Book session={session} />} />
-          <Route path="/login" element={<Auth />} />
-          <Route path="/reset" element={<Reset />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
-        </Routes>
-      </main>
-    </>
-  )
-}
