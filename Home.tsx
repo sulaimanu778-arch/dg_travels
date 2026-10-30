@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom'
 const FROM_CITY = 'Katsina'
 const MAX_PASSENGERS = 5
 
-// All Nigerian states plus the FCT (Katsina is the departure point).
+// All Nigerian states, the FCT (Abuja) and the extra towns.
 const DESTINATIONS = [
   'Abia', 'Abuja', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
-  'Benue', 'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
-  'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Kebbi', 'Kogi', 'Kwara',
-  'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau',
-  'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
+  'Benue', 'Borno', 'Cross River', 'Daura', 'Delta', 'Dutsinma', 'Ebonyi',
+  'Edo', 'Ekiti', 'Enugu', 'Funtua', 'Gombe', 'Imo', 'Jigawa', 'Kaduna',
+  'Kano', 'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun',
+  'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe',
+  'Zamfara', 'Zaria',
 ]
 
-// Makes dropdowns the same size and look as the other boxes.
 const fieldStyle: CSSProperties = {
   width: '100%',
   boxSizing: 'border-box',
@@ -72,4 +72,4 @@ export default function Home() {
       </form>
     </section>
   )
-    }
+                         }
