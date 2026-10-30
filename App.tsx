@@ -8,6 +8,7 @@ import Book from './Book'
 import Auth from './Auth'
 import Reset from './Reset'
 import VerifyOtp from './VerifyOtp'
+import Dashboard from './Dashboard'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -26,7 +27,10 @@ export default function App() {
           <Link to="/">Passenger travel</Link>
           <span className="soon" title="Coming next">Parcel delivery</span>
           {session ? (
-            <button className="link" onClick={() => supabase.auth.signOut()}>Log out</button>
+            <>
+              <Link to="/dashboard">Dashboard</Link>
+              <button className="link" onClick={() => supabase.auth.signOut()}>Log out</button>
+            </>
           ) : (
             <Link to="/login">Log in</Link>
           )}
@@ -45,9 +49,10 @@ export default function App() {
           <Route path="/login" element={<Auth />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-}
+          }
