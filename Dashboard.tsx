@@ -7,32 +7,28 @@ const NAVY = '#10232f'
 const GREEN = '#0f9d6e'
 const AMBER = '#f59e0b'
 
-const card: CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 16,
-  padding: '1.1rem',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-}
-
-const actionCard: CSSProperties = {
-  ...card,
+const choice: CSSProperties = {
   display: 'flex',
-  flexDirection: 'column',
-  gap: 6,
+  alignItems: 'center',
+  gap: 16,
+  padding: '1.4rem',
+  borderRadius: 18,
+  border: '1px solid #e5e7eb',
+  background: '#fff',
+  boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
   textDecoration: 'none',
   color: '#111827',
-  minHeight: 120,
 }
 
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12,
-      padding: '0.7rem 0', borderBottom: '1px solid #f1f5f9' }}>
-      <span style={{ color: '#6b7280' }}>{label}</span>
-      <strong style={{ textAlign: 'right', wordBreak: 'break-all' }}>{value}</strong>
-    </div>
-  )
+const iconBox: CSSProperties = {
+  width: 64,
+  height: 64,
+  borderRadius: 16,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 32,
+  flexShrink: 0,
 }
 
 export default function Dashboard() {
@@ -62,12 +58,9 @@ export default function Dashboard() {
     (user.user_metadata?.username as string | undefined) ||
     (user.email ? user.email.split('@')[0] : 'Traveller')
   const initial = username.charAt(0).toUpperCase()
-  const joined = new Date(user.created_at).toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'short', year: 'numeric',
-  })
 
   return (
-    <section style={{ maxWidth: 720, margin: '0 auto' }}>
+    <section style={{ maxWidth: 640, margin: '0 auto' }}>
       {/* Welcome banner */}
       <div style={{
         background: `linear-gradient(135deg, ${NAVY}, #1b4a5a)`,
@@ -86,47 +79,38 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Main action */}
-      <Link to="/" style={{
-        display: 'block', marginTop: 16, padding: '1.1rem', borderRadius: 16,
-        background: GREEN, color: '#fff', textDecoration: 'none', textAlign: 'center',
-        fontSize: 18, fontWeight: 700,
-      }}>
-        Book a seat out of Katsina
-      </Link>
+      <h2 style={{ margin: '22px 0 12px', fontSize: 20 }}>What would you like to do?</h2>
 
-      {/* Shortcuts */}
-      <div style={{
-        display: 'grid', gap: 12, marginTop: 16,
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-      }}>
-        <Link to="/" style={actionCard}>
-          <span style={{ fontSize: 28 }}>🚌</span>
-          <strong>Passenger travel</strong>
-          <small style={{ color: '#6b7280' }}>Search trips and fares</small>
+      <div style={{ display: 'grid', gap: 14 }}>
+        <Link to="/" style={choice}>
+          <div style={{ ...iconBox, background: '#dcfce7' }}>🚌</div>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>Passenger travel</div>
+            <div style={{ color: '#6b7280', marginTop: 2 }}>
+              Book a seat out of Katsina
+            </div>
+          </div>
         </Link>
 
-        <div style={{ ...actionCard, opacity: 0.65 }}>
-          <span style={{ fontSize: 28 }}>📦</span>
-          <strong>Parcel delivery</strong>
-          <small style={{ color: '#6b7280' }}>Coming soon</small>
-        </div>
-
-        <div style={{ ...actionCard, opacity: 0.65 }}>
-          <span style={{ fontSize: 28 }}>🎫</span>
-          <strong>My bookings</strong>
-          <small style={{ color: '#6b7280' }}>Coming next</small>
+        <div style={{ ...choice, opacity: 0.7, cursor: 'not-allowed' }}>
+          <div style={{ ...iconBox, background: '#fef3c7' }}>📦</div>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>Parcel delivery</div>
+            <div style={{ color: '#6b7280', marginTop: 2 }}>Coming soon</div>
+          </div>
         </div>
       </div>
 
-      {/* Account details */}
-      <div style={{ ...card, marginTop: 16 }}>
-        <h2 style={{ margin: '0 0 6px', fontSize: 18 }}>Account details</h2>
-        <Row label="Username" value={username} />
-        <Row label="Email" value={user.email ?? ''} />
-        <Row label="Member since" value={joined} />
+      {/* Account */}
+      <div style={{
+        marginTop: 22, padding: '1rem 1.2rem', background: '#fff',
+        border: '1px solid #e5e7eb', borderRadius: 16,
+      }}>
+        <div style={{ color: '#6b7280', fontSize: 14 }}>Signed in as</div>
+        <div style={{ fontWeight: 700 }}>{username}</div>
+        <div style={{ color: '#6b7280', wordBreak: 'break-all' }}>{user.email}</div>
         <button onClick={logout} style={{
-          marginTop: 14, width: '100%', padding: '0.85rem', fontSize: 16,
+          marginTop: 12, width: '100%', padding: '0.85rem', fontSize: 16,
           fontWeight: 600, borderRadius: 12, border: '1px solid #d1d5db',
           background: '#fff', color: '#b91c1c', cursor: 'pointer',
         }}>
