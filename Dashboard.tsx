@@ -96,6 +96,14 @@ export default function Dashboard() {
             <div style={{ color: '#6b7280', marginTop: 2 }}>Coming soon</div>
           </div>
         </div>
+
+        <Link to="/my-bookings" style={choice}>
+          <div style={{ ...iconBox, background: '#dbeafe' }}>🎫</div>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>My bookings</div>
+            <div style={{ color: '#6b7280', marginTop: 2 }}>See your trips and tickets</div>
+          </div>
+        </Link>
       </div>
 
       <div style={{
@@ -115,4 +123,4 @@ export default function Dashboard() {
       </div>
     </section>
   )
-      }
+                       }
