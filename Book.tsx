@@ -4,7 +4,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { lagos, naira, Trip, TRIP_COLUMNS } from './format'
 
-type Held = { reference: string; seats: number; total_kobo: number; hold_expires_at: string }
+type Held = { id: string; reference: string; seats: number; total_kobo: number; hold_expires_at: string }
 
 export default function Book({ session }: { session: Session | null }) {
   const { id } = useParams()
@@ -14,6 +14,7 @@ export default function Book({ session }: { session: Session | null }) {
   const [seats, setSeats] = useState(Math.max(1, Number(params.get('seats') ?? 1)))
   const [people, setPeople] = useState([{ full_name: '', phone: '' }])
   const [busy, setBusy] = useState(false)
+  const [paying, setPaying] = useState(false)
   const [held, setHeld] = useState<Held | null>(null)
   const key = useRef(crypto.randomUUID())
 
@@ -47,6 +48,22 @@ export default function Book({ session }: { session: Session | null }) {
     else setHeld(data as Held)
   }
 
+  // Ask our server to start the Paystack payment, then go to Paystack's page
+  const pay = async () => {
+    if (!held) return
+    setPaying(true)
+    setError('')
+    const { data, error } = await supabase.functions.invoke('paystack-init', {
+      body: { booking_id: held.id },
+    })
+    if (error || !data?.url) {
+      setError('Could not start payment. Your hold may have ended. Please try again.')
+      setPaying(false)
+    } else {
+      window.location.href = data.url
+    }
+  }
+
   if (error && !trip) return <p className="error">Could not load this trip: {error}</p>
   if (!trip) return <p>Loading trip…</p>
 
@@ -58,7 +75,11 @@ export default function Book({ session }: { session: Session | null }) {
         <h1>Seats held</h1>
         <p>Booking reference: <strong>{held.reference}</strong></p>
         <p>{held.seats} seat(s), fare {naira(held.total_kobo)}. Held until {lagos(held.hold_expires_at)}.</p>
-        <p className="notice">Payment is not connected yet. Your seats are only held, not paid for, and will be released when the hold ends.</p>
+        <p className="notice">Pay before the hold ends or your seats are released. A small payment processing fee is added on the next page.</p>
+        {error && <p className="error">{error}</p>}
+        <button className="primary" onClick={pay} disabled={paying}>
+          {paying ? 'Opening payment…' : 'Pay now'}
+        </button>
       </section>
     )
   }
@@ -94,4 +115,4 @@ export default function Book({ session }: { session: Session | null }) {
       )}
     </section>
   )
-}
+                        }
