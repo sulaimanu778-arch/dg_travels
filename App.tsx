@@ -9,6 +9,7 @@ import Auth from './Auth'
 import Reset from './Reset'
 import VerifyOtp from './VerifyOtp'
 import Dashboard from './Dashboard'
+import MyBookings from './MyBookings'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -60,9 +61,10 @@ export default function App() {
           <Route path="/reset" element={<Reset />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-}
+    }
