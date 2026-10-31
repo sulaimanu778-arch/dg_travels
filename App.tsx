@@ -44,7 +44,7 @@ export default function App() {
         ) : (
           <nav>
             <Link to="/">Passenger travel</Link>
-            <span className="soon" title="Coming next">Parcel delivery</span>
+            <span className="soon" title="Coming next">Waybill delivery</span>
             <Link to="/login">Log in</Link>
           </nav>
         )}
@@ -71,4 +71,4 @@ export default function App() {
       </main>
     </>
   )
-            }
+      }
