@@ -7,11 +7,15 @@ const NAVY = '#10232f'
 const GREEN = '#0f9d6e'
 const AMBER = '#f59e0b'
 
-const choice: CSSProperties = {
+const box: CSSProperties = {
+  aspectRatio: '1 / 1',
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  gap: 16,
-  padding: '1.4rem',
+  justifyContent: 'center',
+  gap: 10,
+  padding: '1rem',
+  textAlign: 'center',
   borderRadius: 18,
   border: '1px solid #e5e7eb',
   background: '#fff',
@@ -20,16 +24,17 @@ const choice: CSSProperties = {
   color: '#111827',
 }
 
-const iconBox: CSSProperties = {
-  width: 64,
-  height: 64,
-  borderRadius: 16,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 32,
-  flexShrink: 0,
+const icon: CSSProperties = {
+  width: 72, height: 72, borderRadius: 18, fontSize: 36,
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
 }
+
+const TILES = [
+  { to: '/', label: 'Passenger travel', sub: 'Book a seat out of Katsina', emoji: '🚌', bg: '#dcfce7' },
+  { to: '/waybill', label: 'Waybill delivery', sub: 'Send a parcel', emoji: '📦', bg: '#fef3c7' },
+  { to: '/my-bookings', label: 'My bookings', sub: 'Trips and tickets', emoji: '🎫', bg: '#dbeafe' },
+  { to: '/support', label: 'Customer service', sub: 'Get help', emoji: '🎧', bg: '#fce7f3' },
+]
 
 export default function Dashboard() {
   const nav = useNavigate()
@@ -80,47 +85,18 @@ export default function Dashboard() {
 
       <h2 style={{ margin: '22px 0 12px', fontSize: 20 }}>What would you like to do?</h2>
 
-      <div style={{ display: 'grid', gap: 14 }}>
-        <Link to="/" style={choice}>
-          <div style={{ ...iconBox, background: '#dcfce7' }}>🚌</div>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700 }}>Passenger travel</div>
-            <div style={{ color: '#6b7280', marginTop: 2 }}>Book a seat out of Katsina</div>
-          </div>
-        </Link>
-
-        <div style={{ ...choice, opacity: 0.7, cursor: 'not-allowed' }}>
-          <div style={{ ...iconBox, background: '#fef3c7' }}>📦</div>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700 }}>Parcel delivery</div>
-            <div style={{ color: '#6b7280', marginTop: 2 }}>Coming soon</div>
-          </div>
-        </div>
-
-        <Link to="/my-bookings" style={choice}>
-          <div style={{ ...iconBox, background: '#dbeafe' }}>🎫</div>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700 }}>My bookings</div>
-            <div style={{ color: '#6b7280', marginTop: 2 }}>See your trips and tickets</div>
-          </div>
-        </Link>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+        {TILES.map(t => (
+          <Link key={t.to} to={t.to} style={box}>
+            <div style={{ ...icon, background: t.bg }}>{t.emoji}</div>
+            <div style={{ fontSize: 18, fontWeight: 700 }}>{t.label}</div>
+            <div style={{ color: '#6b7280', fontSize: 14 }}>{t.sub}</div>
+          </Link>
+        ))}
       </div>
 
-      <div style={{
-        marginTop: 22, padding: '1rem 1.2rem', background: '#fff',
-        border: '1px solid #e5e7eb', borderRadius: 16,
-      }}>
-        <div style={{ color: '#6b7280', fontSize: 14 }}>Signed in as</div>
-        <div style={{ fontWeight: 700 }}>{username}</div>
-        <div style={{ color: '#6b7280', wordBreak: 'break-all' }}>{user.email}</div>
+      <div style={{ marginTop: 22, textAlign: 'center', color: '#6b7280', fontSize: 14 }}>
+        <div>Signed in as <strong>{username}</strong></div>
+        <div style={{ wordBreak: 'break-all' }}>{user.email}</div>
         <button onClick={logout} style={{
-          marginTop: 12, width: '100%', padding: '0.85rem', fontSize: 16,
-          fontWeight: 600, borderRadius: 12, border: '1px solid #d1d5db',
-          background: '#fff', color: '#b91c1c', cursor: 'pointer',
-        }}>
-          Log out
-        </button>
-      </div>
-    </section>
-  )
-                       }
+          marginTop: 10, padding: '0.45rem 1.1rem', fon
