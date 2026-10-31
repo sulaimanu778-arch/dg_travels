@@ -56,8 +56,15 @@ export default function Book({ session }: { session: Session | null }) {
     const { data, error } = await supabase.functions.invoke('paystack-init', {
       body: { booking_id: held.id },
     })
-    if (error || !data?.url) {
-      let why: string = data?.error ?? ''
+    // the answer can arrive as text or a blob, so unwrap it first
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let out: any = data
+    if (out instanceof Blob) out = await out.text()
+    if (typeof out === 'string') {
+      try { out = JSON.parse(out) } catch (_e) { /* keep as text */ }
+    }
+    if (error || !out?.url) {
+      let why: string = out?.error ?? ''
       if (!why && error) {
         try {
           const ctx = (error as { context?: Response }).context
@@ -66,11 +73,13 @@ export default function Book({ session }: { session: Session | null }) {
         } catch (_e) { /* ignore */ }
         if (!why) why = error.message
       }
-      if (!why) why = 'No payment link came back (booking id: ' + String(held.id) + ')'
+      if (!why) {
+        why = 'No payment link came back. Got: ' + typeof data + ' ' + String(JSON.stringify(out)).slice(0, 120)
+      }
       setError('Could not start payment: ' + why)
       setPaying(false)
     } else {
-      window.location.href = data.url
+      window.location.href = out.url
     }
   }
 
