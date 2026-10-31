@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from './supabase'
 import { lagos, naira } from './format'
+import WB_CSS from './waybillStyles'
 
 const DESTINATIONS = [
   'Abia', 'Abuja', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa',
@@ -12,7 +13,6 @@ const DESTINATIONS = [
   'Zamfara', 'Zaria',
 ]
 const POPULAR = ['Kano', 'Kaduna', 'Abuja', 'Lagos', 'Daura', 'Zaria', 'Funtua', 'Dutsinma']
-
 const COLS =
   'id,pickup_point,departs_at,fare_kobo,parcel_capacity,parcels_taken,' +
   'routes!inner(origin_city,destination_city),transport_operators(name)'
@@ -26,27 +26,6 @@ type Row = {
   parcels_taken: number
   transport_operators: { name: string } | null
 }
-
-const CSS = `
-.wb-hero{background:linear-gradient(135deg,#0a7b52,#10242e);color:#fff;border-radius:14px;padding:1.2rem;margin:1rem 0}
-.wb-hero h1{margin:.2rem 0;font-size:1.7rem}.wb-hero p{margin:.3rem 0}
-.wb-tag{display:inline-block;background:#e8a317;color:#10242e;font-weight:700;border-radius:999px;padding:.15rem .7rem;font-size:.85rem}
-.wb h2{font-size:1.1rem;margin:1.2rem 0 .5rem}
-.wb-chips{display:flex;flex-wrap:wrap;gap:.5rem}
-.wb-chip{font:inherit;min-height:44px;padding:.4rem .95rem;border:1.5px solid #8a9a94;border-radius:999px;background:#fff;color:#10242e;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.wb-chip.on{background:#10242e;color:#fff;border-color:#10242e}
-.wb-chip span{font-size:.8rem}
-.wb-select{margin-top:.6rem;width:100%;padding:.8rem;font:inherit;border:1.5px solid #8a9a94;border-radius:10px;background:#fff}
-.wb-hint{color:#4a5d66;margin:1rem 0}
-.wb-card{background:#fff;border:1px solid #d3dcd8;border-left:6px solid #0a7b52;border-radius:12px;padding:1rem;margin:1rem 0;box-shadow:0 2px 8px rgba(16,36,46,.08)}
-.wb-card p{margin:.25rem 0}
-.wb-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
-.wb-price{font-size:1.3rem;font-weight:800;color:#0a7b52}
-.wb-bar{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:.6rem 0 .3rem}
-.wb-bar i{display:block;height:100%;background:#0a7b52}
-.wb-ok{color:#0a7b52;font-weight:600}.wb-low{color:#b45309;font-weight:700}
-.wb-go{display:block;margin-top:.7rem;text-align:center}
-`
 
 export default function WaybillSearch() {
   const [to, setTo] = useState('')
@@ -67,7 +46,8 @@ export default function WaybillSearch() {
   useEffect(() => {
     if (!to) return
     let stop = false
-    setRows(null); setError('')
+    setRows(null)
+    setError('')
     let start = new Date()
     let q = supabase.from('trips').select(COLS)
       .eq('status', 'published')
@@ -82,14 +62,16 @@ export default function WaybillSearch() {
     q.gt('departs_at', start.toISOString()).then(({ data, error }) => {
       if (stop) return
       if (error) setError(error.message)
-      else setRows((data as unknown as Row[]).filter(t => t.parcel_capacity - t.parcels_taken > 0))
+      else setRows((data as unknown as Row[]).filter(t => t.parcel_capacity > t.parcels_taken))
     })
     return () => { stop = true }
   }, [to, date])
 
+  const chip = (on: boolean) => 'wb-chip' + (on ? ' on' : '')
+
   return (
     <section className="wb">
-      <style>{CSS}</style>
+      <style>{WB_CSS}</style>
       <div className="wb-hero">
         <span className="wb-tag">Waybill delivery</span>
         <h1>Send it from Katsina</h1>
@@ -98,7 +80,43 @@ export default function WaybillSearch() {
       <h2>1. Where is it going?</h2>
       <div className="wb-chips">
         {POPULAR.map(d => (
-          <button key={d} className={'wb-chip' + (to === d ? ' on' : '')} onClick={() => setTo(d)}>{d}</button>
+          <button key={d} className={chip(to === d)} onClick={() => setTo(d)}>{d}</button>
         ))}
       </div>
-      <select className="wb-select" aria-label="More des
+      <select className="wb-select" value={POPULAR.includes(to) ? '' : to}
+        onChange={e => setTo(e.target.value)}>
+        <option value="">More destinations…</option>
+        {DESTINATIONS.filter(d => !POPULAR.includes(d)).map(d => <option key={d}>{d}</option>)}
+      </select>
+      <h2>2. When?</h2>
+      <div className="wb-chips">
+        <button className={chip(date === '')} onClick={() => setDate('')}>Any date</button>
+        {days.map(d => (
+          <button key={d.value} className={chip(date === d.value)} onClick={() => setDate(d.value)}>
+            <b>{d.day}</b><span>{d.num}</span>
+          </button>
+        ))}
+      </div>
+      {!to && <p className="wb-hint">Pick a destination to see trips.</p>}
+      {to && !rows && !error && <p className="wb-hint">Looking for trips to {to}…</p>}
+      {error && <p className="error">Could not load trips: {error}</p>}
+      {rows?.length === 0 && <p className="wb-hint">No trips with waybill space to {to} yet. Try another day.</p>}
+      {rows?.map(t => {
+        const left = t.parcel_capacity - t.parcels_taken
+        return (
+          <article key={t.id} className="wb-card">
+            <div className="wb-top">
+              <strong>{t.transport_operators?.name ?? 'Operator'}</strong>
+              <span className="wb-price">{naira(t.fare_kobo)}</span>
+            </div>
+            <p>Departs {lagos(t.departs_at)}</p>
+            <p>Drop-off: {t.pickup_point}</p>
+            <div className="wb-bar"><i style={{ width: (left / t.parcel_capacity * 100) + '%' }} /></div>
+            <p className={left <= 2 ? 'wb-low' : 'wb-ok'}>{left <= 2 ? `Only ${left} left` : `${left} waybill spaces left`}</p>
+            <Link className="primary wb-go" to={'/waybill/trip/' + t.id}>Send waybill here</Link>
+          </article>
+        )
+      })}
+    </section>
+  )
+                         }
