@@ -12,6 +12,8 @@ import Dashboard from './Dashboard'
 import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
+import WaybillSearch from './WaybillSearch'
+import Support from './Support'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -44,7 +46,7 @@ export default function App() {
         ) : (
           <nav>
             <Link to="/">Passenger travel</Link>
-            <span className="soon" title="Coming next">Waybill delivery</span>
+            <Link to="/waybill">Waybill delivery</Link>
             <Link to="/login">Log in</Link>
           </nav>
         )}
@@ -66,9 +68,11 @@ export default function App() {
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/pay/return" element={<PayReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
+          <Route path="/waybill" element={<WaybillSearch />} />
+          <Route path="/support" element={<Support />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-      }
+          }
