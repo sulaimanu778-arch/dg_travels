@@ -57,7 +57,17 @@ export default function Book({ session }: { session: Session | null }) {
       body: { booking_id: held.id },
     })
     if (error || !data?.url) {
-      setError('Could not start payment. Your hold may have ended. Please try again.')
+      let why: string = data?.error ?? ''
+      if (!why && error) {
+        try {
+          const ctx = (error as { context?: Response }).context
+          const body = ctx ? await ctx.json() : null
+          why = body?.error ?? ''
+        } catch (_e) { /* ignore */ }
+        if (!why) why = error.message
+      }
+      if (!why) why = 'No payment link came back (booking id: ' + String(held.id) + ')'
+      setError('Could not start payment: ' + why)
       setPaying(false)
     } else {
       window.location.href = data.url
@@ -115,4 +125,4 @@ export default function Book({ session }: { session: Session | null }) {
       )}
     </section>
   )
-                        }
+    }
