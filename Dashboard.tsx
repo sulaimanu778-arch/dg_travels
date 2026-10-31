@@ -1,54 +1,17 @@
-import { CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabase'
-
-const NAVY = '#10232f'
-const GREEN = '#0f9d6e'
-const AMBER = '#f59e0b'
-
-const box: CSSProperties = {
-  aspectRatio: '1 / 1',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 10,
-  padding: '1rem',
-  textAlign: 'center',
-  borderRadius: 18,
-  border: '1px solid #e5e7eb',
-  background: '#fff',
-  boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
-  textDecoration: 'none',
-  color: '#111827',
-}
-
-const icon: CSSProperties = {
-  width: 72, height: 72, borderRadius: 18, fontSize: 36,
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-}
-
-const TILES = [
-  { to: '/', label: 'Passenger travel', sub: 'Book a seat out of Katsina', emoji: '🚌', bg: '#dcfce7' },
-  { to: '/waybill', label: 'Waybill delivery', sub: 'Send a parcel', emoji: '📦', bg: '#fef3c7' },
-  { to: '/my-bookings', label: 'My bookings', sub: 'Trips and tickets', emoji: '🎫', bg: '#dbeafe' },
-  { to: '/support', label: 'Customer service', sub: 'Get help', emoji: '🎧', bg: '#fce7f3' },
-]
+import { AMBER, GREEN, NAVY, TILES, box, icon } from './dashStyles'
 
 export default function Dashboard() {
   const nav = useNavigate()
   const [user, setUser] = useState<User | null>(null)
-  const [checking, setChecking] = useState(true)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        nav('/login', { replace: true })
-      } else {
-        setUser(data.session.user)
-        setChecking(false)
-      }
+      if (!data.session) nav('/login', { replace: true })
+      else setUser(data.session.user)
     })
   }, [nav])
 
@@ -57,12 +20,11 @@ export default function Dashboard() {
     nav('/login', { replace: true })
   }
 
-  if (checking || !user) return <p>Loading your dashboard...</p>
+  if (!user) return <p>Loading your dashboard...</p>
 
   const username =
     (user.user_metadata?.username as string | undefined) ||
     (user.email ? user.email.split('@')[0] : 'Traveller')
-  const initial = username.charAt(0).toUpperCase()
 
   return (
     <section style={{ maxWidth: 640, margin: '0 auto' }}>
@@ -76,7 +38,7 @@ export default function Dashboard() {
           width: 60, height: 60, borderRadius: '50%', background: GREEN,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 28, fontWeight: 700, flexShrink: 0,
-        }}>{initial}</div>
+        }}>{username.charAt(0).toUpperCase()}</div>
         <div style={{ minWidth: 0 }}>
           <div style={{ opacity: 0.8, fontSize: 14 }}>Welcome back</div>
           <div style={{ fontSize: 24, fontWeight: 700, wordBreak: 'break-word' }}>{username}</div>
@@ -99,4 +61,13 @@ export default function Dashboard() {
         <div>Signed in as <strong>{username}</strong></div>
         <div style={{ wordBreak: 'break-all' }}>{user.email}</div>
         <button onClick={logout} style={{
-          marginTop: 10, padding: '0.45rem 1.1rem', fon
+          marginTop: 10, padding: '0.45rem 1.1rem', fontSize: 14, fontWeight: 600,
+          borderRadius: 999, border: '1px solid #d1d5db', background: '#fff',
+          color: '#b91c1c', cursor: 'pointer',
+        }}>
+          Log out
+        </button>
+      </div>
+    </section>
+  )
+                       }
