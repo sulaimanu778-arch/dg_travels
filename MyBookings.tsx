@@ -74,7 +74,6 @@ export default function MyBookings() {
       const list = (data ?? []) as unknown as Row[]
       setRows(list)
 
-      // Passenger names (if this part fails, the page still works)
       if (list.length > 0) {
         const { data: p } = await supabase
           .from('booking_passengers')
@@ -116,12 +115,13 @@ export default function MyBookings() {
             ? { label: 'Hold expired', bg: '#e5e7eb', fg: '#374151' }
             : STATUS[b.status] ?? { label: b.status, bg: '#e5e7eb', fg: '#374151' }
           const t = b.trips
+          const who = names[b.id]?.length ? ' (' + names[b.id].join(', ') + ')' : ''
           return (
             <article key={b.id} style={card}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'flex-start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10 }}>
                 <strong style={{ fontSize: 18 }}>
                   {t?.routes
-                    ? `${t.routes.origin_city} to ${t.routes.destination_city}`
+                    ? t.routes.origin_city + ' to ' + t.routes.destination_city
                     : 'Trip details unavailable'}
                 </strong>
                 <span style={{
@@ -136,5 +136,20 @@ export default function MyBookings() {
                 {t && <div>Departs: {when(t.departs_at)}</div>}
                 {t?.pickup_point && <div>Pickup: {t.pickup_point}</div>}
                 {t?.transport_operators?.name && <div>Operator: {t.transport_operators.name}</div>}
-                <div>
-                  {b.seats} {b.seats === 1 ? 'seat' : 'seats'}
+                <div>{b.seats + (b.seats === 1 ? ' seat' : ' seats') + who}</div>
+              </div>
+
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', marginTop: 12,
+                paddingTop: 10, borderTop: '1px solid #f1f5f9',
+              }}>
+                <span style={{ color: '#6b7280' }}>Ref: {b.reference}</span>
+                <strong>{naira(b.total_kobo)}</strong>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
