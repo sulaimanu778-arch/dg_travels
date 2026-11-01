@@ -13,9 +13,8 @@ import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
-import WaybillForm from './WaybillForm'
-import WaybillReceipt from './WaybillReceipt'
 import Support from './Support'
+import MyWaybills from './MyWaybills'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -38,11 +37,12 @@ export default function App() {
   return (
     <>
       <header className="bar">
-        <Link to={session ? '/dashboard' : '/'} className="brand">Katsina Express</Link>
+        <Link to={session ? '/dashboard' : '/'} className="brand">DG Travels</Link>
         {session ? (
           pathname !== '/dashboard' && (
             <nav>
               <Link to="/dashboard">← Dashboard</Link>
+              <Link to="/my-waybills">My waybills</Link>
             </nav>
           )
         ) : (
@@ -71,12 +71,11 @@ export default function App() {
           <Route path="/pay/return" element={<PayReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
-          <Route path="/waybill/trip/:id" element={<WaybillForm />} />
-          <Route path="/waybill/receipt/:id" element={<WaybillReceipt />} />
+          <Route path="/my-waybills" element={<MyWaybills />} />
           <Route path="/support" element={<Support />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-                }
+}
