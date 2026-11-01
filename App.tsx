@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import { configured, supabase } from './supabase'
+import { BRAND } from './brand'
 import Home from './Home'
 import Search from './Search'
 import Book from './Book'
@@ -38,7 +39,7 @@ export default function App() {
   return (
     <>
       <header className="bar">
-        <Link to={session ? '/dashboard' : '/'} className="brand">Katsina Express</Link>
+        <Link to={session ? '/dashboard' : '/'} className="brand">{BRAND}</Link>
         {session ? (
           pathname !== '/dashboard' && (
             <nav>
@@ -80,4 +81,4 @@ export default function App() {
       </main>
     </>
   )
-            }
+}
