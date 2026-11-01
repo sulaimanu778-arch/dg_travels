@@ -4,6 +4,7 @@ import { supabase } from './supabase'
 import { useAdmin } from './useAdmin'
 import { lagos, naira } from './format'
 import ParcelActions from './ParcelActions'
+import ParcelDeliver from './ParcelDeliver'
 
 type Parcel = {
   id: string
@@ -88,9 +89,10 @@ export default function AdminParcels() {
               created {lagos(p.created_at)}
             </small>
             <ParcelActions parcelId={p.id} status={p.status} onDone={load} />
+            <ParcelDeliver parcelId={p.id} status={p.status} onDone={load} />
           </article>
         )
       })}
     </section>
   )
-            }
+          }
