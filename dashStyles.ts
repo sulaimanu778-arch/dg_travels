@@ -1,3 +1,4 @@
+
 export type Tile = {
   to: string
   label: string
@@ -7,10 +8,34 @@ export type Tile = {
 }
 
 export const TILES: Tile[] = [
-  { to: '/', label: 'Passenger travel', emoji: '🚌', from: '#10b981', to2: '#047857' },
-  { to: '/waybill', label: 'Waybill delivery', emoji: '📦', from: '#f97316', to2: '#c2410c' },
-  { to: '/my-bookings', label: 'My bookings', emoji: '🎫', from: '#3b82f6', to2: '#1d4ed8' },
-  { to: '/support', label: 'Customer service', emoji: '🎧', from: '#a855f7', to2: '#7e22ce' },
+  {
+    to: '/',
+    label: 'Passenger travel',
+    emoji: '🚌',
+    from: '#f5b817',
+    to2: '#d99b00',
+  },
+  {
+    to: '/waybill',
+    label: 'Waybill delivery',
+    emoji: '📦',
+    from: '#08734c',
+    to2: '#064e3b',
+  },
+  {
+    to: '/my-bookings',
+    label: 'My bookings',
+    emoji: '🎫',
+    from: '#102b35',
+    to2: '#1d4653',
+  },
+  {
+    to: '/support',
+    label: 'Customer service',
+    emoji: '🎧',
+    from: '#e8a817',
+    to2: '#b77900',
+  },
 ]
 
 function lagosHour(): number {
@@ -33,4 +58,4 @@ export function greeting(): string {
 export function isOpen(): boolean {
   const h = lagosHour()
   return h >= 8 && h < 12
-   }
+}
