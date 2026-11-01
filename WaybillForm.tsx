@@ -1,10 +1,12 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from './supabase'
 import { lagos, naira } from './format'
+import WaybillHeld, { Held } from './WaybillHeld'
+import WaybillFields, { EMPTY } from './WaybillFields'
 
 const COLS =
-  'id,pickup_point,departs_at,fare_kobo,parcel_capacity,parcels_taken,' +
+  'id,pickup_point,departs_at,fare_kobo,' +
   'routes!inner(origin_city,destination_city),transport_operators(name)'
 
 type TripRow = {
@@ -12,17 +14,8 @@ type TripRow = {
   pickup_point: string
   departs_at: string
   fare_kobo: number
-  parcel_capacity: number
-  parcels_taken: number
   routes: { origin_city: string; destination_city: string }
   transport_operators: { name: string } | null
-}
-type Held = { id: string; waybill_no: string; price_kobo: number; hold_expires_at: string }
-type Field = ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-
-const EMPTY = {
-  size: 'small', sender_name: '', sender_phone: '',
-  receiver_name: '', receiver_phone: '', description: '',
 }
 
 export default function WaybillForm() {
@@ -33,7 +26,6 @@ export default function WaybillForm() {
   const [agree, setAgree] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [paying, setPaying] = useState(false)
   const [held, setHeld] = useState<Held | null>(null)
   const key = useRef(crypto.randomUUID())
 
@@ -45,21 +37,23 @@ export default function WaybillForm() {
     })
   }, [id])
 
-  // a changed form is a new request, so it gets a new duplicate-protection key
-  useEffect(() => { key.current = crypto.randomUUID() }, [JSON.stringify(f), agree])
-
-  const set = (k: keyof typeof EMPTY) => (e: Field) =>
-    setF(x => ({ ...x, [k]: e.target.value }))
+  useEffect(() => {
+    key.current = crypto.randomUUID()
+  }, [JSON.stringify(f), agree])
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
     setBusy(true)
     setError('')
     const { data, error } = await supabase.rpc('create_parcel_hold', {
-      p_trip_id: id, p_size: f.size,
-      p_sender_name: f.sender_name, p_sender_phone: f.sender_phone,
-      p_receiver_name: f.receiver_name, p_receiver_phone: f.receiver_phone,
-      p_description: f.description, p_accept_terms: agree,
+      p_trip_id: id,
+      p_size: f.size,
+      p_sender_name: f.sender_name,
+      p_sender_phone: f.sender_phone,
+      p_receiver_name: f.receiver_name,
+      p_receiver_phone: f.receiver_phone,
+      p_description: f.description,
+      p_accept_terms: agree,
       p_idempotency_key: key.current,
     })
     setBusy(false)
@@ -67,15 +61,34 @@ export default function WaybillForm() {
     else setHeld(data as Held)
   }
 
-  const pay = async () => {
-    if (!held) return
-    setPaying(true)
-    setError('')
-    const { data, error } = await supabase.functions.invoke('paystack-init', {
-      body: { parcel_id: held.id },
-    })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let out: any = data
-    if (out instanceof Blob) out = await out.text()
-    if (typeof out === 'string') {
-      try { out = JSON.parse(out) } catch (_e) { /* keep as
+  if (error && !trip) return <p className="error">Could not load this trip: {error}</p>
+  if (!trip) return <p>Loading trip...</p>
+  if (held) return <WaybillHeld held={held} />
+
+  return (
+    <section>
+      <h1>Waybill: {trip.routes.origin_city} to {trip.routes.destination_city}</h1>
+      <p>
+        {trip.transport_operators?.name} · departs {lagos(trip.departs_at)} ·{' '}
+        {naira(trip.fare_kobo)}
+      </p>
+      {loggedIn === false ? (
+        <p className="notice">
+          <Link to="/login">Log in or create an account</Link> to send a waybill.
+        </p>
+      ) : (
+        <form onSubmit={submit} className="card form">
+          <WaybillFields f={f} setF={setF} agree={agree} setAgree={setAgree} />
+          <p>
+            Price: <strong>{naira(trip.fare_kobo)}</strong>. A payment processing
+            fee is shown at checkout.
+          </p>
+          {error && <p className="error">{error}</p>}
+          <button className="primary" disabled={busy || !agree}>
+            {busy ? 'Holding space...' : 'Hold my waybill space'}
+          </button>
+        </form>
+      )}
+    </section>
+  )
+      }
