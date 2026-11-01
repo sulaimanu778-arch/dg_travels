@@ -12,14 +12,12 @@ export const NAV_CSS = `
   padding-bottom: env(safe-area-inset-bottom, 0px);
   backdrop-filter: blur(14px);
 }
-
 .dk-navin {
   display: flex;
   max-width: 640px;
   height: 68px;
   margin: 0 auto;
 }
-
 .dk-navin a {
   position: relative;
   flex: 1;
@@ -34,16 +32,13 @@ export const NAV_CSS = `
   font-size: 12px;
   font-weight: 700;
 }
-
 .dk-navin a span {
   font-size: 23px;
   line-height: 1.2;
 }
-
 .dk-navin a.on {
   color: #f5b817;
 }
-
 .dk-navin a.on::before {
   content: '';
   position: absolute;
@@ -55,7 +50,7 @@ export const NAV_CSS = `
   border-radius: 0 0 5px 5px;
   background: #f5b817;
 }
-
 .dk-navin a:active {
   opacity: .75;
 }
+`
