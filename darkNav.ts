@@ -1,7 +1,69 @@
+
 export const NAV_CSS = `
-.dk-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(11,26,34,.97);border-top:1px solid #243a45;padding-bottom:env(safe-area-inset-bottom,0)}
-.dk-navin{display:flex;max-width:640px;margin:0 auto}
-.dk-navin a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.55rem 0;color:#8aa0aa;text-decoration:none;font-size:11.5px;font-weight:600}
-.dk-navin a.on{color:#f59e0b}
-.dk-navin a span{font-size:20px}
+.dk-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: rgba(16,43,53,.98);
+  border-top: 1px solid rgba(245,184,23,.3);
+  box-shadow: 0 -5px 22px rgba(0,0,0,.12);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  backdrop-filter: blur(14px);
+}
+
+.dk-navin {
+  display: flex;
+  max-width: 640px;
+  height: 68px;
+  margin: 0 auto;
+}
+
+.dk-navin a {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 0;
+  color: #a9bac0;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  transition: color .2s ease;
+}
+
+.dk-navin a span {
+  font-size: 23px;
+  line-height: 1.2;
+  transition: transform .2s ease;
+}
+
+.dk-navin a.on {
+  color: #f5b817;
+}
+
+.dk-navin a.on span {
+  transform: translateY(-2px);
+}
+
+.dk-navin a.on::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 5px 5px;
+  background: #f5b817;
+  box-shadow: 0 2px 8px rgba(245,184,23,.4);
+}
+
+.dk-navin a:active {
+  opacity: .75;
+}
 `
