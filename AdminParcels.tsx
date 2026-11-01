@@ -6,6 +6,7 @@ import { lagos, naira } from './format'
 import ParcelActions from './ParcelActions'
 import ParcelDeliver from './ParcelDeliver'
 import ParcelHistory from './ParcelHistory'
+import ParcelScanBox from './ParcelScanBox'
 
 type Parcel = {
   id: string
@@ -60,6 +61,7 @@ export default function AdminParcels() {
     <section>
       <p><Link to="/admin">← Admin</Link></p>
       <h1>All parcels</h1>
+      <ParcelScanBox parcels={rows ?? []} onDone={load} />
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0 14px' }}>
         {FILTERS.map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{
@@ -97,4 +99,4 @@ export default function AdminParcels() {
       })}
     </section>
   )
-}
+            }
