@@ -15,6 +15,7 @@ import PayReturn from './PayReturn'
 import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
 import WaybillSend from './WaybillSend'
+import ParcelReturn from './ParcelReturn'
 import Support from './Support'
 import MyWaybills from './MyWaybills'
 import History from './History'
@@ -72,6 +73,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/pay/return" element={<PayReturn />} />
+          <Route path="/parcel/return" element={<ParcelReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
           <Route path="/waybill/trip/:id" element={<WaybillSend />} />
@@ -83,4 +85,4 @@ export default function App() {
       </main>
     </>
   )
-            }
+          }
