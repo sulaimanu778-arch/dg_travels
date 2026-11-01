@@ -50,6 +50,7 @@ export default function ParcelReturn() {
       {state === 'ok' ? (
         <>
           <p className="notice">Your waybill payment was received. Take your parcel to the drop-off point.</p>
+          <p><Link className="primary" to={'/waybill/receipt/' + parcel}>View and print receipt</Link></p>
           <p><Link to="/my-waybills">Open My waybills</Link></p>
         </>
       ) : (
@@ -58,4 +59,4 @@ export default function ParcelReturn() {
       {state === 'bad' && <p><Link to="/my-waybills">Go to My waybills</Link></p>}
     </section>
   )
-}
+          }
