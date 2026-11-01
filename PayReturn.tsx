@@ -6,6 +6,7 @@ export default function PayReturn() {
   const [params] = useSearchParams()
   const nav = useNavigate()
   const booking = params.get('booking')
+  const parcel = params.get('parcel')
   const [message, setMessage] = useState('Checking your payment. Please wait...')
   const [failed, setFailed] = useState(false)
 
@@ -14,37 +15,36 @@ export default function PayReturn() {
     let tries = 0
     const end = (text: string) => { setFailed(true); setMessage(text) }
 
-    if (!booking) {
-      end('This payment link is missing a booking.')
+    if (!booking && !parcel) {
+      end('This payment link is missing a booking or waybill.')
       return
     }
 
     const check = async () => {
       tries += 1
-      const { data } = await supabase.functions.invoke('paystack-verify', {
-        body: { booking_id: booking },
-      })
+      const body = parcel ? { parcel_id: parcel } : { booking_id: booking }
+      const { data } = await supabase.functions.invoke('paystack-verify', { body })
       if (stop) return
       const status: string = data?.status ?? ''
 
       if (status === 'confirmed') {
-        nav('/receipt/' + booking, { replace: true })
+        nav(parcel ? '/waybill/receipt/' + parcel : '/receipt/' + booking, { replace: true })
         return
       }
       if (status === 'needs_refund') {
-        end('We received your payment, but your seats could not be kept. Please contact support. You will be refunded.')
+        end('We received your payment, but your space could not be kept. Please contact support. You will be refunded.')
         return
       }
       if (status === 'amount_mismatch') {
-        end('We could not match your payment amount. Please contact support with your booking reference.')
+        end('We could not match your payment amount. Please contact support with your reference.')
         return
       }
       if (status === 'failed' || status === 'abandoned' || status === 'reversed') {
-        end('Your payment was not completed. You can go to My bookings and try again if your seats are still held.')
+        end('Your payment was not completed. You can go back and try again if your space is still held.')
         return
       }
       if (tries >= 8) {
-        end('We are still waiting for confirmation from Paystack. Please check My bookings in a few minutes.')
+        end('We are still waiting for confirmation from Paystack. Please check again in a few minutes.')
         return
       }
       setTimeout(check, 3000)
@@ -52,13 +52,19 @@ export default function PayReturn() {
 
     check()
     return () => { stop = true }
-  }, [booking, nav])
+  }, [booking, parcel, nav])
 
   return (
     <section className="card">
       <h1>{failed ? 'Payment update' : 'Please wait'}</h1>
       <p className={failed ? 'error' : 'notice'}>{message}</p>
-      {failed && <p><Link to="/my-bookings">Go to My bookings</Link></p>}
+      {failed && (
+        <p>
+          <Link to={parcel ? '/waybill' : '/my-bookings'}>
+            {parcel ? 'Back to waybill delivery' : 'Go to My bookings'}
+          </Link>
+        </p>
+      )}
     </section>
   )
-}
+    }
