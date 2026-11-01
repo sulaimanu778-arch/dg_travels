@@ -1,0 +1,24 @@
+import { Link, useLocation } from 'react-router-dom'
+
+const ITEMS = [
+  { to: '/dashboard', icon: '🏠', label: 'Home' },
+  { to: '/', icon: '🚌', label: 'Travel' },
+  { to: '/waybill', icon: '📦', label: 'Waybill' },
+  { to: '/my-bookings', icon: '🎫', label: 'Trips' },
+]
+
+export default function BottomNav() {
+  const { pathname } = useLocation()
+  return (
+    <div className="dk-nav">
+      <div className="dk-navin">
+        {ITEMS.map(i => (
+          <Link key={i.to} to={i.to} className={pathname === i.to ? 'on' : ''}>
+            <span>{i.icon}</span>
+            {i.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
