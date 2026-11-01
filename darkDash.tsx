@@ -101,4 +101,67 @@ export const DARK_CSS = `
   .dk { max-width: 850px; margin: auto; padding-top: 35px; }
   .dk-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+.dk-rec {
+  display: grid;
+  gap: 12px;
+}
+.dk-card {
+  display: block;
+  padding: 16px;
+  border: 1px solid #244653;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #102e3b, #0b2632);
+  color: #f8fafc;
+  text-decoration: none;
+  transition: transform .2s ease;
+}
+.dk-card:active {
+  transform: scale(.98);
+}
+.dk-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.dk-top strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.dk-badge {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.dk-card small {
+  display: block;
+  color: #9fb8c3;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.dk-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #244653;
+  color: #b8cbd3;
+  font-size: 12px;
+}
+.dk-foot b {
+  color: #f5c542;
+  font-size: 16px;
+}
+.dk-empty {
+  padding: 20px;
+  border-radius: 14px;
+  background: #102e3b;
+  color: #b8cbd3;
+  line-height: 1.6;
+}
 `
