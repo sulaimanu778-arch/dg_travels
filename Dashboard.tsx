@@ -52,9 +52,6 @@ export default function Dashboard() {
         {open ? '● Support open now' : '● Support opens 08:00'} · every day 08:00 to 12:00
       </Link>
 
-      <h2>Recent activity</h2>
-      <RecentBookings userId={user.id} />
-
       <h2>Our services</h2>
       <div className="dk-tiles">
         {TILES.map(t => (
@@ -74,6 +71,9 @@ export default function Dashboard() {
         <div style={{ fontSize: 18, fontWeight: 800 }}>📦 Need to send something?</div>
         <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>Send a waybill from Katsina ›</div>
       </Link>
+
+      <h2>Recent activity</h2>
+      <RecentBookings userId={user.id} />
 
       <div className="dk-acct">
         <div>Signed in as <strong>{username}</strong> · {user.email}</div>
