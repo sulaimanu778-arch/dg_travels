@@ -1,33 +1,33 @@
 import { Link, useLocation } from 'react-router-dom'
 
 const ITEMS = [
-  { to: '/dashboard', icon: '🏠', label: 'Home' },
-  { to: '/', icon: '🚌', label: 'Travel' },
-  { to: '/waybill', icon: '📦', label: 'Waybill' },
-  { to: '/my-bookings', icon: '🎫', label: 'Trips' },
+  ['/dashboard', '🏠', 'Home'],
+  ['/', '🚌', 'Travel'],
+  ['/waybill', '📦', 'Waybill'],
+  ['/my-bookings', '🎫', 'Trips'],
 ]
 
-const CSS = `
-.dk-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(11,26,34,.97);border-top:1px solid #243a45;padding-bottom:env(safe-area-inset-bottom,0)}
-.dk-navin{display:flex;max-width:640px;margin:0 auto}
-.dk-navin a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:.55rem 0;color:#8aa0aa;text-decoration:none;font-size:11.5px;font-weight:600}
-.dk-navin a.on{color:#f59e0b}
-.dk-navin a span{font-size:20px}
-`
+const BAR = {
+  position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 20,
+  display: 'flex', gap: 0, background: '#0b1a22',
+  borderTop: '1px solid #243a45',
+  paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+} as const
 
 export default function BottomNav() {
   const { pathname } = useLocation()
   return (
-    <div className="dk-nav">
-      <style>{CSS}</style>
-      <div className="dk-navin">
-        {ITEMS.map(i => (
-          <Link key={i.to} to={i.to} className={pathname === i.to ? 'on' : ''}>
-            <span>{i.icon}</span>
-            {i.label}
-          </Link>
-        ))}
-      </div>
-    </div>
+    <nav style={BAR}>
+      {ITEMS.map(([to, icon, label]) => (
+        <Link key={to} to={to} style={{
+          flex: 1, textAlign: 'center', padding: '8px 0', textDecoration: 'none',
+          fontSize: 12, fontWeight: 600,
+          color: pathname === to ? '#f59e0b' : '#8aa0aa',
+        }}>
+          <div style={{ fontSize: 20 }}>{icon}</div>
+          {label}
+        </Link>
+      ))}
+    </nav>
   )
-}
+  }
