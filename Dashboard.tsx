@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const username =
     (user.user_metadata?.username as string | undefined) ||
     (user.email ? user.email.split('@')[0] : 'Traveller')
+
   const open = isOpen()
 
   return (
@@ -55,6 +57,7 @@ export default function Dashboard() {
       </Link>
 
       <h2>Our services</h2>
+
       <div className="dk-tiles">
         {TILES.map(t => (
           <Link key={t.to} to={t.to} className="dk-tile">
@@ -67,6 +70,7 @@ export default function Dashboard() {
             {t.label}
           </Link>
         ))}
+
         {admin === 'yes' && (
           <Link to="/admin" className="dk-tile">
             <div
@@ -81,23 +85,115 @@ export default function Dashboard() {
       </div>
 
       <Link to="/waybill" className="dk-promo">
-        <div style={{ fontSize: 18, fontWeight: 800 }}>📦 Need to send something?</div>
-        <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>Send a waybill from Katsina ›</div>
+        <div style={{ fontSize: 18, fontWeight: 800 }}>
+          📦 Need to send something?
+        </div>
+        <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>
+          Send a waybill from Katsina ›
+        </div>
       </Link>
 
-      <Link to="/operator/signup" className="dk-pill open">
-        🚌 Own a transport company? Register here ›
+      {/* Premium Transport Operator Registration Card */}
+      <Link
+        to="/operator/signup"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 15,
+          padding: '22px 18px',
+          margin: '22px 0',
+          borderRadius: 20,
+          textDecoration: 'none',
+          color: '#ffffff',
+          background: 'linear-gradient(135deg, #10243a 0%, #075b50 100%)',
+          border: '1px solid rgba(255,255,255,0.16)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.22)',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div
+          style={{
+            minWidth: 62,
+            height: 62,
+            borderRadius: 18,
+            background: 'linear-gradient(145deg, #facc15, #f59e0b)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 34,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+          }}
+        >
+          🚌
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              color: '#facc15',
+              fontSize: 11,
+              fontWeight: 900,
+              letterSpacing: 1.5,
+              marginBottom: 6
+            }}
+          >
+            PARTNER WITH US
+          </div>
+
+          <div
+            style={{
+              fontSize: 19,
+              fontWeight: 900,
+              lineHeight: 1.3,
+              marginBottom: 6
+            }}
+          >
+            Own a Transport Company?
+          </div>
+
+          <div
+            style={{
+              fontSize: 13,
+              lineHeight: 1.5,
+              color: '#dbeafe',
+              marginBottom: 13
+            }}
+          >
+            Join Katsina Express and grow your transport business.
+          </div>
+
+          <span
+            style={{
+              display: 'inline-block',
+              background: '#facc15',
+              color: '#10243a',
+              padding: '10px 17px',
+              borderRadius: 10,
+              fontSize: 14,
+              fontWeight: 900
+            }}
+          >
+            REGISTER NOW →
+          </span>
+        </div>
       </Link>
 
       <h2>Recent activity</h2>
+
       <RecentBookings userId={user.id} />
 
       <div className="dk-acct">
-        <div>Signed in as <strong>{username}</strong> · {user.email}</div>
-        <button className="dk-out" onClick={logout}>Log out</button>
+        <div>
+          Signed in as <strong>{username}</strong> · {user.email}
+        </div>
+        <button className="dk-out" onClick={logout}>
+          Log out
+        </button>
       </div>
 
       <BottomNav />
     </section>
   )
-      }
+        }
+        
