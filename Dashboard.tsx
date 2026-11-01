@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabase'
-import { AMBER, GREEN, NAVY, TILES, box, css, greeting, icon, isOpen } from './dashStyles'
+import { AMBER, GREEN, NAVY, TILES, css, greeting, isOpen } from './dashStyles'
 
 export default function Dashboard() {
   const nav = useNavigate()
@@ -41,7 +41,7 @@ export default function Dashboard() {
           border: '3px solid rgba(255,255,255,0.7)', boxShadow: '0 0 0 6px rgba(255,255,255,0.12)',
           fontSize: 32, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>{username.charAt(0).toUpperCase()}</div>
-        <div style={{ minWidth: 0, position: 'relative' }}>
+        <div style={{ minWidth: 0 }}>
           <div style={{ opacity: 0.85, fontSize: 14 }}>{greeting()} 👋</div>
           <div style={{ fontSize: 28, fontWeight: 800, wordBreak: 'break-word' }}>{username}</div>
           <div style={{ opacity: 0.8, fontSize: 13 }}>Travel and waybill delivery from Katsina</div>
@@ -56,20 +56,30 @@ export default function Dashboard() {
         {open ? '● Support open now' : '● Support opens 08:00'} · every day 08:00 to 12:00
       </Link>
 
-      <h2 style={{ margin: '22px 0 12px', fontSize: 20 }}>What would you like to do?</h2>
+      <h2 style={{ margin: '22px 0 14px', fontSize: 20 }}>What would you like to do?</h2>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 10 }}>
         {TILES.map(t => (
-          <Link key={t.to} to={t.to} className="dg-tile"
-            style={{ ...box, background: `linear-gradient(145deg, ${t.from}, ${t.to2})` }}>
-            <span className="dg-mark">{t.emoji}</span>
-            <span className="dg-go">Open ›</span>
-            <div className="dg-emoji" style={icon}>{t.emoji}</div>
-            <div style={{ fontSize: 18, fontWeight: 800 }}>{t.label}</div>
-            <div style={{ opacity: 0.9, fontSize: 13 }}>{t.sub}</div>
+          <Link key={t.to} to={t.to} className="dg-app">
+            <div className="dg-ico" style={{
+              width: 68, height: 68, borderRadius: '50%', fontSize: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: `linear-gradient(145deg, ${t.from}, ${t.to2})`,
+              boxShadow: '0 8px 16px rgba(16,35,47,0.25)', border: '3px solid #fff',
+            }}>{t.emoji}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.25 }}>{t.label}</div>
           </Link>
         ))}
       </div>
+
+      <Link to="/waybill" style={{
+        display: 'block', marginTop: 26, padding: '1.1rem 1.2rem', borderRadius: 20,
+        textDecoration: 'none', color: '#fff',
+        background: 'linear-gradient(135deg, #d97706, #ea580c)',
+      }}>
+        <div style={{ fontSize: 18, fontWeight: 800 }}>📦 Need to send something?</div>
+        <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>Send a waybill from Katsina ›</div>
+      </Link>
 
       <div style={{ marginTop: 24, textAlign: 'center', color: '#6b7280', fontSize: 13 }}>
         <div>Signed in as <strong>{username}</strong> · {user.email}</div>
@@ -83,4 +93,4 @@ export default function Dashboard() {
       </div>
     </section>
   )
-            }
+      }
