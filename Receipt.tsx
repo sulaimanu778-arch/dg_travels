@@ -56,7 +56,7 @@ export default function Receipt() {
     <section className="card">
       <style>{'@media print { .bar, .no-print { display: none !important } }'}</style>
       <h1>Booking receipt</h1>
-      <p>Issued by DG Travels, a booking platform.</p>
+      <p>Issued by Katsina Express, a booking platform.</p>
       <p>Booking reference: <strong>{data.reference}</strong></p>
       <p>Route: {t.routes.origin_city} to {t.routes.destination_city}</p>
       <p>Operator: {t.transport_operators?.name ?? 'Not shown'}</p>
