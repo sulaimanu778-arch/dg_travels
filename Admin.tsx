@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import { supabase } from './supabase'
 import { useAdmin } from './useAdmin'
 
-type Counts = { operators: number; trips: number; bookings: number }
-
 async function count(table: string, col?: string, val?: string) {
   let q = supabase.from(table).select('id', { count: 'exact', head: true })
   if (col && val) q = q.eq(col, val)
@@ -14,7 +12,7 @@ async function count(table: string, col?: string, val?: string) {
 
 export default function Admin() {
   const admin = useAdmin()
-  const [c, setC] = useState<Counts | null>(null)
+  const [n, setN] = useState<number[] | null>(null)
 
   useEffect(() => {
     if (admin !== 'yes') return
@@ -22,7 +20,7 @@ export default function Admin() {
       count('transport_operators', 'status', 'pending'),
       count('trips', 'status', 'pending_approval'),
       count('bookings'),
-    ]).then(([operators, trips, bookings]) => setC({ operators, trips, bookings }))
+    ]).then(setN)
   }, [admin])
 
   if (admin === 'checking') return <p>Checking access...</p>
@@ -30,28 +28,32 @@ export default function Admin() {
     return (
       <section className="card">
         <h1>Admins only</h1>
-        <p>This area is for administrators.</p>
         <p><Link to="/dashboard">Back to dashboard</Link></p>
       </section>
     )
   }
 
-  const items = [
-    ['Operators waiting for approval', c?.operators],
-    ['Trips waiting for approval', c?.trips],
-    ['All bookings', c?.bookings],
-  ] as const
+  const rows: [string, number | undefined, string | null][] = [
+    ['Operators waiting for approval', n?.[0], null],
+    ['Trips waiting for approval', n?.[1], null],
+    ['All bookings', n?.[2], '/admin/bookings'],
+  ]
 
   return (
     <section>
       <h1>Admin</h1>
-      {items.map(([label, n]) => (
-        <div key={label} className="card" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span>{label}</span>
-          <strong>{n ?? '...'}</strong>
-        </div>
-      ))}
-      <p className="notice">More tools coming: operators, trips, parcels and refunds.</p>
+      {rows.map(([label, v, to]) => {
+        const body = (
+          <div className="card" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>{label}{to ? ' ›' : ''}</span>
+            <strong>{v ?? '...'}</strong>
+          </div>
+        )
+        return to
+          ? <Link key={label} to={to} style={{ textDecoration: 'none', color: 'inherit' }}>{body}</Link>
+          : <div key={label}>{body}</div>
+      })}
+      <p className="notice">Coming next: operators, trips, parcels and refunds.</p>
     </section>
   )
 }
