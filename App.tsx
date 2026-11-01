@@ -38,7 +38,7 @@ export default function App() {
   return (
     <>
       <header className="bar">
-        <Link to={session ? '/dashboard' : '/'} className="brand">DG Travels</Link>
+        <Link to={session ? '/dashboard' : '/'} className="brand">Katsina Express</Link>
         {session ? (
           pathname !== '/dashboard' && (
             <nav>
