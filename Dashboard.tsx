@@ -85,6 +85,10 @@ export default function Dashboard() {
         <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>Send a waybill from Katsina ›</div>
       </Link>
 
+      <Link to="/operator/signup" className="dk-pill open">
+        🚌 Own a transport company? Register here ›
+      </Link>
+
       <h2>Recent activity</h2>
       <RecentBookings userId={user.id} />
 
@@ -96,4 +100,4 @@ export default function Dashboard() {
       <BottomNav />
     </section>
   )
-          }
+      }
