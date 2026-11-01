@@ -5,6 +5,7 @@ import { useAdmin } from './useAdmin'
 import { lagos, naira } from './format'
 import ParcelActions from './ParcelActions'
 import ParcelDeliver from './ParcelDeliver'
+import ParcelHistory from './ParcelHistory'
 
 type Parcel = {
   id: string
@@ -90,9 +91,10 @@ export default function AdminParcels() {
             </small>
             <ParcelActions parcelId={p.id} status={p.status} onDone={load} />
             <ParcelDeliver parcelId={p.id} status={p.status} onDone={load} />
+            <ParcelHistory parcelId={p.id} />
           </article>
         )
       })}
     </section>
   )
-          }
+}
