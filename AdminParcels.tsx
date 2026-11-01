@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from './supabase'
 import { useAdmin } from './useAdmin'
 import { lagos, naira } from './format'
+import ParcelActions from './ParcelActions'
 
 type Parcel = {
   id: string
@@ -37,15 +38,16 @@ export default function AdminParcels() {
   const [filter, setFilter] = useState('all')
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (admin !== 'yes') return
-    supabase.from('parcels').select(SELECT)
+  const load = useCallback(async () => {
+    const { data, error } = await supabase.from('parcels').select(SELECT)
       .order('created_at', { ascending: false }).limit(200)
-      .then(({ data, error }) => {
-        if (error) { setError(error.message); return }
-        setRows((data ?? []) as unknown as Parcel[])
-      })
-  }, [admin])
+    if (error) { setError(error.message); return }
+    setRows((data ?? []) as unknown as Parcel[])
+  }, [])
+
+  useEffect(() => {
+    if (admin === 'yes') load()
+  }, [admin, load])
 
   if (admin === 'checking') return <p>Checking access...</p>
   if (admin === 'no') return <p className="error">Admins only.</p>
@@ -85,9 +87,10 @@ export default function AdminParcels() {
               {p.trips ? 'Departs ' + lagos(p.trips.departs_at) + ' · ' : ''}
               created {lagos(p.created_at)}
             </small>
+            <ParcelActions parcelId={p.id} status={p.status} onDone={load} />
           </article>
         )
       })}
     </section>
   )
-}
+            }
