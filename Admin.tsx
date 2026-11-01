@@ -20,6 +20,7 @@ export default function Admin() {
       count('transport_operators', 'status', 'pending'),
       count('trips', 'status', 'pending_approval'),
       count('bookings'),
+      count('payments', 'status', 'refund_pending'),
     ]).then(setN)
   }, [admin])
 
@@ -37,6 +38,7 @@ export default function Admin() {
     ['Operators waiting for approval', n?.[0], null],
     ['Trips waiting for approval', n?.[1], null],
     ['All bookings', n?.[2], '/admin/bookings'],
+    ['Refunds waiting', n?.[3], '/admin/refunds'],
   ]
 
   return (
@@ -53,7 +55,7 @@ export default function Admin() {
           ? <Link key={label} to={to} style={{ textDecoration: 'none', color: 'inherit' }}>{body}</Link>
           : <div key={label}>{body}</div>
       })}
-      <p className="notice">Coming next: operators, trips, parcels and refunds.</p>
+      <p className="notice">Coming next: operators, trips and parcels.</p>
     </section>
   )
 }
