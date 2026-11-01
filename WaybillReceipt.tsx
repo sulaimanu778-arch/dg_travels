@@ -26,6 +26,10 @@ const COLS =
   'receiver_phone,description,' +
   'trips(departs_at,pickup_point,routes(origin_city,destination_city),transport_operators(name))'
 
+const PRINT_CSS =
+  '@media print { .bar, .no-print { display: none !important; } ' +
+  'body { background: #fff !important; } }'
+
 function Line({ label, value }: { label: string; value: string }) {
   return (
     <p style={{ display: 'flex', justifyContent: 'space-between', gap: 12, margin: '8px 0' }}>
@@ -52,7 +56,7 @@ export default function WaybillReceipt() {
   }, [id])
 
   if (error) return <p className="error">Could not load this waybill: {error}</p>
-  if (!p) return <p>Loading your waybill…</p>
+  if (!p) return <p>Loading your waybill...</p>
 
   const t = p.trips
   const route = t?.routes ? t.routes.origin_city + ' to ' + t.routes.destination_city : ''
@@ -60,6 +64,7 @@ export default function WaybillReceipt() {
 
   return (
     <section className="card">
+      <style>{PRINT_CSS}</style>
       <h1>{paid ? 'Waybill confirmed' : 'Waybill not paid yet'}</h1>
       {!paid && <p className="notice">Payment has not been confirmed for this waybill.</p>}
       <Line label="Waybill number" value={p.waybill_no} />
@@ -79,7 +84,12 @@ export default function WaybillReceipt() {
           <small>Keep this code safe. The receiver may be asked for it when collecting the parcel.</small>
         </div>
       )}
-      <p><Link to="/dashboard">Back to dashboard</Link></p>
+      <div className="no-print">
+        <button className="primary" onClick={() => window.print()}>
+          Print or save as PDF
+        </button>
+        <p><Link to="/dashboard">Back to dashboard</Link></p>
+      </div>
     </section>
   )
-}
+    }
