@@ -36,7 +36,7 @@ export default function Admin() {
   }
 
   const rows: [string, number | undefined, string | null][] = [
-    ['Operators waiting for approval', n?.[0], null],
+    ['Operators waiting for approval', n?.[0], '/admin/operators'],
     ['Trips waiting for approval', n?.[1], null],
     ['All bookings', n?.[2], '/admin/bookings'],
     ['All parcels', n?.[4], '/admin/parcels'],
@@ -57,7 +57,7 @@ export default function Admin() {
           ? <Link key={label} to={to} style={{ textDecoration: 'none', color: 'inherit' }}>{body}</Link>
           : <div key={label}>{body}</div>
       })}
-      <p className="notice">Coming next: operators and trips.</p>
+      <p className="notice">Coming next: trips.</p>
     </section>
   )
 }
