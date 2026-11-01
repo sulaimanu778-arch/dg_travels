@@ -22,6 +22,7 @@ import AdminRefunds from './AdminRefunds'
 import AdminParcels from './AdminParcels'
 import AdminOperators from './AdminOperators'
 import AdminTrips from './AdminTrips'
+import OperatorSignup from './OperatorSignup'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -86,6 +87,7 @@ export default function App() {
           <Route path="/admin/parcels" element={<AdminParcels />} />
           <Route path="/admin/operators" element={<AdminOperators />} />
           <Route path="/admin/trips" element={<AdminTrips />} />
+          <Route path="/operator/signup" element={<OperatorSignup />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
