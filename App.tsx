@@ -15,6 +15,7 @@ import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
 import Support from './Support'
 import MyWaybills from './MyWaybills'
+import History from './History'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -42,7 +43,7 @@ export default function App() {
           pathname !== '/dashboard' && (
             <nav>
               <Link to="/dashboard">← Dashboard</Link>
-              <Link to="/my-waybills">My waybills</Link>
+              <Link to="/history">History</Link>
             </nav>
           )
         ) : (
@@ -72,10 +73,11 @@ export default function App() {
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
           <Route path="/my-waybills" element={<MyWaybills />} />
+          <Route path="/history" element={<History />} />
           <Route path="/support" element={<Support />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-}
+            }
