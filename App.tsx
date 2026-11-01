@@ -20,6 +20,7 @@ import Admin from './Admin'
 import AdminBookings from './AdminBookings'
 import AdminRefunds from './AdminRefunds'
 import AdminParcels from './AdminParcels'
+import AdminOperators from './AdminOperators'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -82,9 +83,10 @@ export default function App() {
           <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/refunds" element={<AdminRefunds />} />
           <Route path="/admin/parcels" element={<AdminParcels />} />
+          <Route path="/admin/operators" element={<AdminOperators />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-                                                }
+          }
