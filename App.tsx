@@ -17,6 +17,7 @@ import WaybillForm from './WaybillForm'
 import WaybillReceipt from './WaybillReceipt'
 import Support from './Support'
 import Admin from './Admin'
+import AdminBookings from './AdminBookings'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -76,9 +77,10 @@ export default function App() {
           <Route path="/waybill/receipt/:id" element={<WaybillReceipt />} />
           <Route path="/support" element={<Support />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-}
+      }
