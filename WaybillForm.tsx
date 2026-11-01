@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from './supabase'
 import { lagos, naira } from './format'
+import { isPhone, PHONE_MESSAGE } from './phone'
 import WaybillHeld, { Held } from './WaybillHeld'
 import WaybillFields, { EMPTY } from './WaybillFields'
 
@@ -43,6 +44,10 @@ export default function WaybillForm() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!isPhone(f.sender_phone) || !isPhone(f.receiver_phone)) {
+      setError(PHONE_MESSAGE)
+      return
+    }
     setBusy(true)
     setError('')
     const { data, error } = await supabase.rpc('create_parcel_hold', {
@@ -78,17 +83,24 @@ export default function WaybillForm() {
         </p>
       ) : (
         <form onSubmit={submit} className="card form">
-          <WaybillFields f={f} setF={setF} agree={agree} setAgree={setAgree} />
+          <WaybillFields f={f} setF={setF} />
           <p>
             Price: <strong>{naira(trip.fare_kobo)}</strong>. A payment processing
             fee is shown at checkout.
           </p>
           {error && <p className="error">{error}</p>}
-          <button className="primary" disabled={busy || !agree}>
-            {busy ? 'Holding space...' : 'Hold my waybill space'}
-          </button>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+            <label style={{ flex: '1 1 220px', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              <input type="checkbox" checked={agree} onChange={e => setAgree(e.target.checked)}
+                style={{ marginTop: 4 }} />
+              <span>I confirm the parcel has no illegal, dangerous or prohibited items.</span>
+            </label>
+            <button className="primary" style={{ flex: '1 1 200px' }} disabled={busy || !agree}>
+              {busy ? 'Holding space...' : 'Hold my waybill space'}
+            </button>
+          </div>
         </form>
       )}
     </section>
   )
-      }
+}
