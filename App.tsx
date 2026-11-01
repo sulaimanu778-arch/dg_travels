@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import { configured, supabase } from './supabase'
-import { BRAND } from './brand'
 import Home from './Home'
 import Search from './Search'
 import Book from './Book'
@@ -14,12 +13,10 @@ import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
-import WaybillSend from './WaybillSend'
-import ParcelReturn from './ParcelReturn'
-import WaybillSlip from './WaybillSlip'
+import WaybillForm from './WaybillForm'
+import WaybillReceipt from './WaybillReceipt'
 import Support from './Support'
-import MyWaybills from './MyWaybills'
-import History from './History'
+import Admin from './Admin'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -42,12 +39,11 @@ export default function App() {
   return (
     <>
       <header className="bar">
-        <Link to={session ? '/dashboard' : '/'} className="brand">{BRAND}</Link>
+        <Link to={session ? '/dashboard' : '/'} className="brand">Katsina Express</Link>
         {session ? (
           pathname !== '/dashboard' && (
             <nav>
               <Link to="/dashboard">← Dashboard</Link>
-              <Link to="/history">History</Link>
             </nav>
           )
         ) : (
@@ -74,17 +70,15 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/pay/return" element={<PayReturn />} />
-          <Route path="/parcel/return" element={<ParcelReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
-          <Route path="/waybill/trip/:id" element={<WaybillSend />} />
-          <Route path="/waybill/receipt/:id" element={<WaybillSlip />} />
-          <Route path="/my-waybills" element={<MyWaybills />} />
-          <Route path="/history" element={<History />} />
+          <Route path="/waybill/trip/:id" element={<WaybillForm />} />
+          <Route path="/waybill/receipt/:id" element={<WaybillReceipt />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-                                                        }
+}
