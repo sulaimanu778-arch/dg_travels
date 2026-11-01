@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import QRCode from 'qrcode'
 import { supabase } from './supabase'
 import { lagos, naira } from './format'
 
@@ -43,6 +44,7 @@ export default function WaybillReceipt() {
   const { id } = useParams()
   const [p, setP] = useState<P | null>(null)
   const [code, setCode] = useState('')
+  const [qr, setQr] = useState('')
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -54,6 +56,13 @@ export default function WaybillReceipt() {
       if (typeof data === 'string') setCode(data)
     })
   }, [id])
+
+  useEffect(() => {
+    if (!p || !code) return
+    QRCode.toDataURL('KEP:' + p.waybill_no + ':' + code, { width: 240, margin: 1 })
+      .then(setQr)
+      .catch(() => setQr(''))
+  }, [p, code])
 
   if (error) return <p className="error">Could not load this waybill: {error}</p>
   if (!p) return <p>Loading your waybill...</p>
@@ -81,7 +90,10 @@ export default function WaybillReceipt() {
         <div style={{ margin: '16px 0', padding: 16, background: '#f3f4f6', borderRadius: 12, textAlign: 'center' }}>
           <div style={{ color: '#6b7280' }}>Delivery code</div>
           <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: 6 }}>{code}</div>
-          <small>Keep this code safe. The receiver may be asked for it when collecting the parcel.</small>
+          {qr && <img src={qr} alt="Delivery QR code" width={180} height={180} />}
+          <small style={{ display: 'block' }}>
+            Keep this code and QR safe. The receiver may be asked for them when collecting the parcel.
+          </small>
         </div>
       )}
       <div className="no-print">
