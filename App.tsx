@@ -14,6 +14,7 @@ import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
+import WaybillSend from './WaybillSend'
 import Support from './Support'
 import MyWaybills from './MyWaybills'
 import History from './History'
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="/pay/return" element={<PayReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
+          <Route path="/waybill/trip/:id" element={<WaybillSend />} />
           <Route path="/my-waybills" element={<MyWaybills />} />
           <Route path="/history" element={<History />} />
           <Route path="/support" element={<Support />} />
