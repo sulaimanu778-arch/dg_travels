@@ -13,6 +13,8 @@ import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
 import WaybillSearch from './WaybillSearch'
+import WaybillForm from './WaybillForm'
+import WaybillReceipt from './WaybillReceipt'
 import Support from './Support'
 
 export default function App() {
@@ -69,10 +71,12 @@ export default function App() {
           <Route path="/pay/return" element={<PayReturn />} />
           <Route path="/receipt/:id" element={<Receipt />} />
           <Route path="/waybill" element={<WaybillSearch />} />
+          <Route path="/waybill/trip/:id" element={<WaybillForm />} />
+          <Route path="/waybill/receipt/:id" element={<WaybillReceipt />} />
           <Route path="/support" element={<Support />} />
           <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
         </Routes>
       </main>
     </>
   )
-          }
+                }
