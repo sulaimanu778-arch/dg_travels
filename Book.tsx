@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { lagos, naira, Trip, TRIP_COLUMNS } from './format'
+import { cleanPhone, isPhone, PHONE_MESSAGE } from './phone'
 
 type Held = { id: string; reference: string; seats: number; total_kobo: number; hold_expires_at: string }
 
@@ -35,6 +36,10 @@ export default function Book({ session }: { session: Session | null }) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
+    if (people.some(p => !isPhone(p.phone))) {
+      setError(PHONE_MESSAGE)
+      return
+    }
     setBusy(true)
     setError('')
     const { data, error } = await supabase.rpc('create_booking_hold', {
@@ -121,9 +126,11 @@ export default function Book({ session }: { session: Session | null }) {
                 <input required minLength={2} value={p.full_name}
                   onChange={e => setPeople(x => x.map((v, j) => j === i ? { ...v, full_name: e.target.value } : v))} />
               </label>
-              <label>Phone (optional)
-                <input type="tel" value={p.phone}
-                  onChange={e => setPeople(x => x.map((v, j) => j === i ? { ...v, phone: e.target.value } : v))} />
+              <label>Phone (11 digits)
+                <input type="tel" inputMode="numeric" required maxLength={11}
+                  pattern="[0-9]{11}" title={PHONE_MESSAGE} placeholder="08012345678"
+                  value={p.phone}
+                  onChange={e => setPeople(x => x.map((v, j) => j === i ? { ...v, phone: cleanPhone(e.target.value) } : v))} />
               </label>
             </fieldset>
           ))}
