@@ -4,12 +4,14 @@ import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { TILES, greeting, isOpen } from './dashStyles'
 import { DARK_CSS } from './darkDash'
+import { useAdmin } from './useAdmin'
 import RecentBookings from './RecentBookings'
 import BottomNav from './BottomNav'
 
 export default function Dashboard() {
   const nav = useNavigate()
   const [user, setUser] = useState<User | null>(null)
+  const admin = useAdmin()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -65,6 +67,17 @@ export default function Dashboard() {
             {t.label}
           </Link>
         ))}
+        {admin === 'yes' && (
+          <Link to="/admin" className="dk-tile">
+            <div
+              className="dk-ico"
+              style={{ background: 'linear-gradient(145deg, #10242e, #0a7b52)' }}
+            >
+              🛡️
+            </div>
+            Admin
+          </Link>
+        )}
       </div>
 
       <Link to="/waybill" className="dk-promo">
@@ -83,4 +96,4 @@ export default function Dashboard() {
       <BottomNav />
     </section>
   )
-      }
+          }
