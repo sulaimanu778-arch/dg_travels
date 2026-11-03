@@ -1,62 +1,53 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from './supabase'
-import { useAdmin } from './useAdmin'
+import AdminFares from './AdminFares'
+import AdminAddTrip from './AdminAddTrip'
+import AdminTrips from './AdminTrips'
 
-async function count(table: string, col?: string, val?: string) {
-  let q = supabase.from(table).select('id', { count: 'exact', head: true })
-  if (col && val) q = q.eq(col, val)
-  const { count: n } = await q
-  return n ?? 0
-}
+type Tab = 'fares' | 'add' | 'trips'
+const TABS: [Tab, string][] = [['fares', 'Fares'], ['add', 'Add trip'], ['trips', 'Trips']]
 
 export default function Admin() {
-  const admin = useAdmin()
-  const [n, setN] = useState<number[] | null>(null)
+  const nav = useNavigate()
+  const [allowed, setAllowed] = useState<boolean | null>(null)
+  const [tab, setTab] = useState<Tab>('fares')
+  const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    if (admin !== 'yes') return
-    Promise.all([
-      count('transport_operators', 'status', 'pending'),
-      count('trips', 'status', 'pending_approval'),
-      count('bookings'),
-      count('payments', 'status', 'refund_pending'),
-      count('parcels'),
-    ]).then(setN)
-  }, [admin])
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { nav('/login', { replace: true }); return }
+      const { data: rows } = await supabase.from('user_roles').select('role')
+        .eq('user_id', data.session.user.id).eq('role', 'admin')
+      setAllowed((rows ?? []).length > 0)
+    })
+  }, [nav])
 
-  if (admin === 'checking') return <p>Checking access...</p>
-  if (admin === 'no') {
-    return (
-      <section className="card">
-        <h1>Admins only</h1>
-        <p><Link to="/dashboard">Back to dashboard</Link></p>
-      </section>
-    )
-  }
-
-  const rows: [string, number | undefined, string | null][] = [
-    ['Operators waiting for approval', n?.[0], '/admin/operators'],
-    ['Trips waiting for approval', n?.[1], '/admin/trips'],
-    ['All bookings', n?.[2], '/admin/bookings'],
-    ['All parcels', n?.[4], '/admin/parcels'],
-    ['Refunds waiting', n?.[3], '/admin/refunds'],
-  ]
+  if (allowed === null) return <p>Checking access...</p>
+  if (!allowed) return <p className="notice">Admins only. <Link to="/dashboard">Back to dashboard</Link></p>
 
   return (
     <section>
       <h1>Admin</h1>
-      {rows.map(([label, v, to]) => {
-        const body = (
-          <div className="card" style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>{label}{to ? ' ›' : ''}</span>
-            <strong>{v ?? '...'}</strong>
-          </div>
-        )
-        return to
-          ? <Link key={label} to={to} style={{ textDecoration: 'none', color: 'inherit' }}>{body}</Link>
-          : <div key={label}>{body}</div>
-      })}
+      <div style={{ display: 'flex', gap: '.5rem', margin: '1rem 0' }}>
+        {TABS.map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            style={{
+              flex: 1, padding: '.7rem', borderRadius: 10, fontWeight: 700, cursor: 'pointer',
+              border: '1.5px solid #0a7b52',
+              background: tab === key ? '#0a7b52' : '#fff',
+              color: tab === key ? '#fff' : '#0a7b52',
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      {tab === 'fares' && <AdminFares />}
+      {tab === 'add' && <AdminAddTrip onAdded={() => setRefresh(refresh + 1)} />}
+      {tab === 'trips' && <AdminTrips refresh={refresh} />}
     </section>
   )
-            }
+      }
