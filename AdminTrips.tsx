@@ -1,107 +1,70 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
-import { useAdmin } from './useAdmin'
 import { lagos, naira } from './format'
 
 type Trip = {
   id: string
-  status: string
   departs_at: string
   fare_kobo: number
   seat_capacity: number
   seats_taken: number
-  parcels_taken: number
   parcel_capacity: number
-  routes: { origin_city: string; destination_city: string } | null
+  parcels_taken: number
+  status: string
+  routes: { origin_city: string; destination_city: string }
   transport_operators: { name: string } | null
 }
 
-const SELECT =
-  'id,status,departs_at,fare_kobo,seat_capacity,seats_taken,parcels_taken,' +
-  'parcel_capacity,routes(origin_city,destination_city),transport_operators(name)'
-const FILTERS = ['all', 'pending_approval', 'draft', 'published', 'cancelled', 'completed']
-const BTN: Record<string, [string, string, string][]> = {
-  pending_approval: [['published', 'Publish', '#0a7b52'], ['cancelled', 'Cancel', '#b91c1c']],
-  draft: [['published', 'Publish', '#0a7b52'], ['cancelled', 'Cancel', '#b91c1c']],
-  published: [['cancelled', 'Cancel', '#b91c1c']],
-  cancelled: [['published', 'Publish again', '#0a7b52']],
-}
+const COLS =
+  'id,departs_at,fare_kobo,seat_capacity,seats_taken,parcel_capacity,parcels_taken,status,' +
+  'routes(origin_city,destination_city),transport_operators(name)'
 
-export default function AdminTrips() {
-  const admin = useAdmin()
-  const [rows, setRows] = useState<Trip[] | null>(null)
-  const [filter, setFilter] = useState('all')
-  const [error, setError] = useState('')
+export default function AdminTrips({ refresh }: { refresh: number }) {
+  const [trips, setTrips] = useState<Trip[] | null>(null)
+  const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState('')
 
-  const load = useCallback(async () => {
-    const { data, error } = await supabase.from('trips').select(SELECT)
-      .order('departs_at', { ascending: false }).limit(200)
-    if (error) { setError(error.message); return }
-    setRows((data ?? []) as unknown as Trip[])
-  }, [])
+  const load = () =>
+    supabase.from('trips').select(COLS)
+      .gt('departs_at', new Date().toISOString())
+      .neq('status', 'cancelled')
+      .order('departs_at')
+      .limit(100)
+      .then(({ data, error }) => {
+        if (error) setMsg(error.message)
+        else setTrips(data as unknown as Trip[])
+      })
 
-  useEffect(() => {
-    if (admin === 'yes') load()
-  }, [admin, load])
+  useEffect(() => { load() }, [refresh])
 
-  const change = async (t: Trip, status: string) => {
-    if (status === 'cancelled' && !window.confirm('Cancel this trip? Customers with seats may need refunds.')) return
+  const cancel = async (t: Trip) => {
+    const name = t.routes.destination_city + ', ' + lagos(t.departs_at)
+    if (!window.confirm('Cancel this trip?\n' + name)) return
     setBusy(t.id)
-    setError('')
-    const { error } = await supabase.from('trips').update({ status }).eq('id', t.id)
+    setMsg('')
+    const { error } = await supabase.rpc('admin_cancel_trip', { p_trip: t.id })
     setBusy('')
-    if (error) setError(error.message)
-    else load()
+    if (error) setMsg(error.message)
+    else { setMsg('Trip cancelled: ' + name); load() }
   }
 
-  if (admin === 'checking') return <p>Checking access...</p>
-  if (admin === 'no') return <p className="error">Admins only.</p>
-
-  const shown = (rows ?? []).filter(t => filter === 'all' || t.status === filter)
-
   return (
-    <section>
-      <p><Link to="/admin">← Admin</Link></p>
-      <h1>Trips</h1>
-      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '8px 0 14px' }}>
-        {FILTERS.map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{
-            padding: '6px 12px', borderRadius: 999, cursor: 'pointer', fontWeight: 600,
-            border: '1px solid #0a7b52',
-            background: filter === f ? '#0a7b52' : '#fff',
-            color: filter === f ? '#fff' : '#0a7b52',
-          }}>{f.replace(/_/g, ' ')}</button>
-        ))}
-      </div>
-      {error && <p className="error">{error}</p>}
-      {!error && rows === null && <p>Loading...</p>}
-      {rows && shown.length === 0 && <p className="empty">No trips here.</p>}
-      {shown.map(t => (
-        <article key={t.id} className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-            <strong>
-              {t.routes ? t.routes.origin_city + ' to ' + t.routes.destination_city : 'Trip'}
-            </strong>
-            <strong>{naira(t.fare_kobo)}</strong>
-          </div>
-          <div>{t.status.replace(/_/g, ' ')} · departs {lagos(t.departs_at)}</div>
-          <small>
-            {t.transport_operators?.name ?? 'No operator'} · seats {t.seats_taken}/{t.seat_capacity}
-            · parcels {t.parcels_taken}/{t.parcel_capacity}
-          </small>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-            {(BTN[t.status] ?? []).map(([st, label, color]) => (
-              <button key={st} disabled={busy === t.id} onClick={() => change(t, st)}
-                style={{
-                  padding: '8px 14px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                  fontWeight: 700, background: color, color: '#fff',
-                }}>{label}</button>
-            ))}
-          </div>
-        </article>
+    <div>
+      <h2>Upcoming trips</h2>
+      {msg && <p className="notice">{msg}</p>}
+      {trips === null && !msg && <p>Loading trips...</p>}
+      {trips?.length === 0 && <p>No upcoming trips.</p>}
+      {trips?.map(t => (
+        <div key={t.id} className="card">
+          <strong>{t.routes.origin_city} to {t.routes.destination_city}</strong>
+          <p>{t.transport_operators?.name ?? 'Operator'} · {lagos(t.departs_at)}</p>
+          <p>Fare {naira(t.fare_kobo)} · Status: {t.status}</p>
+          <p>Seats sold {t.seats_taken}/{t.seat_capacity} · Waybills {t.parcels_taken}/{t.parcel_capacity}</p>
+          <button className="primary" disabled={busy === t.id} onClick={() => cancel(t)}>
+            {busy === t.id ? 'Cancelling...' : 'Cancel trip'}
+          </button>
+        </div>
       ))}
-    </section>
+    </div>
   )
 }
