@@ -10,6 +10,7 @@ type Held = { id: string; reference: string; seats: number; total_kobo: number; 
 export default function Book({ session }: { session: Session | null }) {
   const { id } = useParams()
   const [params] = useSearchParams()
+  const locked = params.get('seats') !== null
   const [trip, setTrip] = useState<Trip | null>(null)
   const [error, setError] = useState('')
   const [seats, setSeats] = useState(Math.max(1, Number(params.get('seats') ?? 1)))
@@ -117,8 +118,16 @@ export default function Book({ session }: { session: Session | null }) {
       ) : (
         <form onSubmit={submit} className="card form">
           <label>Seats
-            <input type="number" min={1} max={Math.min(5, left)} value={seats} onChange={e => setSeats(Number(e.target.value))} />
+            <input type="number" min={1} max={Math.min(5, left)} value={seats}
+              readOnly={locked} onChange={e => setSeats(Number(e.target.value))}
+              style={locked ? { background: '#f1f5f9', color: '#6b7280' } : undefined} />
           </label>
+          {locked && (
+            <small>
+              Number of passengers is fixed from your search.{' '}
+              <Link to="/">Change it on the search page</Link>
+            </small>
+          )}
           {people.map((p, i) => (
             <fieldset key={i}>
               <legend>Passenger {i + 1}</legend>
@@ -141,4 +150,4 @@ export default function Book({ session }: { session: Session | null }) {
       )}
     </section>
   )
-    }
+                   }
