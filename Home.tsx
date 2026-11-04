@@ -14,17 +14,13 @@ const field: CSSProperties = {
 export default function Home() {
   const nav = useNavigate()
   const formRef = useRef<HTMLDivElement>(null)
-  const [name, setName] = useState('')
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
   const [to, setTo] = useState('')
   const [date, setDate] = useState('')
   const [seats, setSeats] = useState(1)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      const u = data.session?.user
-      if (!u) return
-      setName((u.user_metadata?.username as string | undefined) || (u.email ? u.email.split('@')[0] : ''))
-    })
+    supabase.auth.getSession().then(({ data }) => setLoggedIn(!!data.session))
   }, [])
 
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -39,26 +35,23 @@ export default function Home() {
 
   return (
     <section style={{ maxWidth: 640, margin: '0 auto' }}>
-      <div style={{
-        position: 'relative', overflow: 'hidden', borderRadius: 24, padding: '2.2rem 1rem',
-        background: 'linear-gradient(135deg, #10232f, #064e3b 60%, #0f9d6e)',
-      }}>
-        <div style={{ position: 'absolute', right: -40, top: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(245,158,11,0.3)' }} />
-        <div style={{ position: 'absolute', left: -30, bottom: -50, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-        <div style={{
-          position: 'relative', background: 'rgba(255,255,255,0.93)', borderRadius: 18, padding: '1.4rem',
-        }}>
-          <h1 style={{ margin: 0 }}>Hello{name ? ', ' + name : ''}</h1>
-          <p style={{ margin: '8px 0 14px' }}>
-            Where would you like to travel next? {BRAND} will take you there.
-          </p>
-          <button className="primary" onClick={scrollToForm}>Book now</button>
-        </div>
-      </div>
+      {loggedIn === false && (
+        <>
+          <div style={{
+            borderRadius: 24, padding: '1.6rem 1.2rem', color: '#fff',
+            background: 'linear-gradient(135deg, #10232f, #064e3b 60%, #0f9d6e)',
+          }}>
+            <h1 style={{ margin: 0, color: '#fff' }}>Welcome to {BRAND}</h1>
+            <p style={{ margin: '8px 0 14px' }}>
+              Book a seat or send a waybill from Katsina.
+            </p>
+            <button className="primary" onClick={scrollToForm}>Book now</button>
+          </div>
+          <HomeTiles onBook={scrollToForm} />
+        </>
+      )}
 
-      <HomeTiles onBook={scrollToForm} />
-
-      <div ref={formRef} className="card form" style={{ marginTop: 24 }}>
+      <div ref={formRef} className="card form" style={{ marginTop: 16 }}>
         <h2 style={{ margin: 0 }}>Book a seat out of Katsina</h2>
         <form onSubmit={go} className="form">
           <label>From
@@ -85,4 +78,4 @@ export default function Home() {
       </div>
     </section>
   )
-  }
+}
