@@ -11,7 +11,7 @@
   border-bottom: 0; letter-spacing: 0.3px; font-size: 1.2rem;
 }
 .brand::before {
-  content: 'KE'; display: inline-grid; place-items: center;
+  content: 'DG'; display: inline-grid; place-items: center;
   width: 2rem; height: 2rem; border-radius: 9px;
   background: var(--amber); color: var(--ink);
   font-size: 0.85rem; font-weight: 800;
