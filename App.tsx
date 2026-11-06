@@ -84,6 +84,7 @@ export default function App() {
           <Route path="/reset" element={<Reset />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/operator/signup" element={<OperatorSignup />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/pay/return" element={<PayReturn />} />
           <Route path="/parcel/return" element={<ParcelReturn />} />
