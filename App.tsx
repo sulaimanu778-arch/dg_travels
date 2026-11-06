@@ -28,7 +28,7 @@ import AdminTrips from './AdminTrips'
 import AdminBookings from './AdminBookings'
 import AdminParcels from './AdminParcels'
 import AdminRefunds from './AdminRefunds'
-
+import OperatorSignup from './OperatorSignup'
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const admin = useAdmin()
