@@ -1,199 +1,268 @@
 
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import type { User } from '@supabase/supabase-js'
-import { supabase } from './supabase'
-import { TILES, greeting, isOpen } from './dashStyles'
-import { DARK_CSS } from './darkDash'
-import { useAdmin } from './useAdmin'
-import RecentBookings from './RecentBookings'
-import BottomNav from './BottomNav'
+export const DARK_CSS = `
+.dk {
+  min-height: 100vh;
+  padding: 24px 16px 120px;
+  background: #101426;
+  color: #f4f5ff;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
 
-export default function Dashboard() {
-  const nav = useNavigate()
-  const [user, setUser] = useState<User | null>(null)
-  const admin = useAdmin()
+.dk a {
+  color: inherit;
+  text-decoration: none;
+}
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) nav('/login', { replace: true })
-      else setUser(data.session.user)
-    })
-  }, [nav])
+.dk-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 25px 22px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #242b55, #493b83);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,.25);
+  border: 1px solid #6255a5;
+}
 
-  const logout = async () => {
-    await supabase.auth.signOut()
-    nav('/login', { replace: true })
+.dk-av {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #8b7cff, #5545bd);
+  color: #fff;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.dk-hi {
+  color: #c9c9e9;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dk-name {
+  font-size: 28px;
+  font-weight: 900;
+  margin: 4px 0;
+  color: #fff;
+}
+
+.dk-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin: 22px 0 14px;
+  border-radius: 17px;
+  background: #202640;
+  color: #fff;
+  border: 1px solid #343d61;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dk-pill {
+  display: block;
+  padding: 14px;
+  border-radius: 13px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dk-pill.open {
+  background: #153d38;
+  color: #76e3b5;
+  border: 1px solid #286c5b;
+}
+
+.dk-pill.shut {
+  background: #40351f;
+  color: #ffd47b;
+  border: 1px solid #725b30;
+}
+
+.dk h2 {
+  font-size: 20px;
+  font-weight: 900;
+  margin: 28px 0 15px;
+  color: #fff;
+}
+
+.dk-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+}
+
+.dk-tile {
+  padding: 19px 17px;
+  min-height: 135px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 19px;
+  background: #202640;
+  color: #f5f5ff;
+  font-weight: 800;
+  font-size: 15px;
+  border: 1px solid #343d61;
+  box-shadow: 0 5px 16px rgba(0,0,0,.2);
+  transition: transform .2s ease;
+}
+
+.dk-tile:active {
+  transform: scale(.97);
+}
+
+.dk-ico {
+  width: 55px;
+  height: 55px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  font-size: 27px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+.dk-promo {
+  display: block;
+  margin-top: 23px;
+  padding: 24px 20px;
+  border-radius: 19px;
+  background: linear-gradient(120deg, #35316c, #51418b);
+  color: #fff;
+  border: 1px solid #7165b7;
+  box-shadow: 0 7px 18px rgba(0,0,0,.2);
+}
+
+.dk-acct {
+  margin-top: 28px;
+  padding: 17px;
+  color: #b7bdd7;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  border-top: 1px solid #343d61;
+}
+
+.dk-out {
+  margin-top: 12px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 11px;
+  background: #7565db;
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.dk-rec {
+  display: grid;
+  gap: 13px;
+}
+
+.dk-card {
+  display: block;
+  padding: 18px;
+  border: 1px solid #343d61;
+  border-left: 5px solid #8877ff;
+  border-radius: 17px;
+  background: #202640;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+
+.dk-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.dk-top strong {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #fff;
+}
+
+.dk-badge {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.dk-card small {
+  display: block;
+  color: #b7bdd7;
+  font-size: 12px;
+  margin-bottom: 13px;
+}
+
+.dk-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #343d61;
+  color: #b7bdd7;
+  font-size: 12px;
+}
+
+.dk-foot b {
+  color: #82d8ff;
+  font-size: 17px;
+}
+
+.dk-empty {
+  padding: 22px;
+  border-radius: 16px;
+  background: #202640;
+  border: 1px dashed #596187;
+  color: #c5c9df;
+  line-height: 1.7;
+}
+
+@media(min-width:700px) {
+  .dk {
+    max-width: 1100px;
+    margin: auto;
+    padding-top: 35px;
   }
 
-  if (!user) return <p>Loading your dashboard...</p>
+  .dk-tiles {
+    grid-template-columns: repeat(4,minmax(0,1fr));
+  }
+}
 
-  const username =
-    (user.user_metadata?.username as string | undefined) ||
-    (user.email ? user.email.split('@')[0] : 'Traveller')
+@media(max-width:380px) {
+  .dk {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
-  const open = isOpen()
+  .dk-hero {
+    padding: 19px 15px;
+  }
 
-  return (
-    <section className="dk">
-      <style>{DARK_CSS}</style>
+  .dk-name {
+    font-size: 24px;
+  }
 
-      <div className="dk-hero">
-        <div className="dk-av">{username.charAt(0).toUpperCase()}</div>
-        <div style={{ minWidth: 0 }}>
-          <div className="dk-hi">{greeting()} 👋</div>
-          <div className="dk-name">{username}</div>
-          <div className="dk-hi">Travel and waybill delivery from Katsina</div>
-        </div>
-      </div>
-
-      <Link to="/" className="dk-search">
-        <span>Where are you going?</span>
-        <b>🔍</b>
-      </Link>
-
-      <Link to="/support" className={'dk-pill ' + (open ? 'open' : 'shut')}>
-        {open ? '● Support open now' : '● Support opens 08:00'} · every day 08:00 to 12:00
-      </Link>
-
-      <h2>Our services</h2>
-
-      <div className="dk-tiles">
-        {TILES.map(t => (
-          <Link key={t.to} to={t.to} className="dk-tile">
-            <div
-              className="dk-ico"
-              style={{ background: `linear-gradient(145deg, ${t.from}, ${t.to2})` }}
-            >
-              {t.emoji}
-            </div>
-            {t.label}
-          </Link>
-        ))}
-
-        {admin === 'yes' && (
-          <Link to="/admin" className="dk-tile">
-            <div
-              className="dk-ico"
-              style={{ background: 'linear-gradient(145deg, #10242e, #0a7b52)' }}
-            >
-              🛡️
-            </div>
-            Admin
-          </Link>
-        )}
-      </div>
-
-      <Link to="/waybill" className="dk-promo">
-        <div style={{ fontSize: 18, fontWeight: 800 }}>
-          📦 Need to send something?
-        </div>
-        <div style={{ opacity: 0.92, fontSize: 14, marginTop: 2 }}>
-          Send a waybill from Katsina ›
-        </div>
-      </Link>
-
-      {/* Premium Transport Operator Registration Card */}
-      <Link
-        to="/operator/signup"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 15,
-          padding: '22px 18px',
-          margin: '22px 0',
-          borderRadius: 20,
-          textDecoration: 'none',
-          color: '#ffffff',
-          background: 'linear-gradient(135deg, #10243a 0%, #075b50 100%)',
-          border: '1px solid rgba(255,255,255,0.16)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.22)',
-          width: '100%',
-          boxSizing: 'border-box'
-        }}
-      >
-        <div
-          style={{
-            minWidth: 62,
-            height: 62,
-            borderRadius: 18,
-            background: 'linear-gradient(145deg, #facc15, #f59e0b)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 34,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-          }}
-        >
-          🚌
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              color: '#facc15',
-              fontSize: 11,
-              fontWeight: 900,
-              letterSpacing: 1.5,
-              marginBottom: 6
-            }}
-          >
-            PARTNER WITH US
-          </div>
-
-          <div
-            style={{
-              fontSize: 19,
-              fontWeight: 900,
-              lineHeight: 1.3,
-              marginBottom: 6
-            }}
-          >
-            Own a Transport Company?
-          </div>
-
-          <div
-            style={{
-              fontSize: 13,
-              lineHeight: 1.5,
-              color: '#dbeafe',
-              marginBottom: 13
-            }}
-          >
-            Join DG Travels and grow your transport business.
-          </div>
-
-          <span
-            style={{
-              display: 'inline-block',
-              background: '#facc15',
-              color: '#10243a',
-              padding: '10px 17px',
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 900
-            }}
-          >
-            REGISTER NOW →
-          </span>
-        </div>
-      </Link>
-
-      <h2>Recent activity</h2>
-
-      <RecentBookings userId={user.id} />
-
-      <div className="dk-acct">
-        <div>
-          Signed in as <strong>{username}</strong> · {user.email}
-        </div>
-        <button className="dk-out" onClick={logout}>
-          Log out
-        </button>
-      </div>
-
-      <BottomNav />
-    </section>
-  )
-        }
-        
+  .dk-tile {
+    padding: 15px 12px;
+    font-size: 14px;
+  }
+}
+`
