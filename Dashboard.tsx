@@ -160,7 +160,7 @@ export default function Dashboard() {
               marginBottom: 13
             }}
           >
-            Join Katsina Express and grow your transport business.
+            Join DG Travels and grow your transport business.
           </div>
 
           <span
