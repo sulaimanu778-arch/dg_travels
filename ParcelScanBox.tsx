@@ -17,7 +17,7 @@ export default function ParcelScanBox({ parcels, onDone }: Props) {
     setOk('')
     setFound(null)
     if (!text.startsWith('KEP:')) {
-      setMsg('This QR is not a Katsina Express waybill.')
+      setMsg('This QR is not a DG Travels waybill.')
       return
     }
     const rest = text.slice(4)
