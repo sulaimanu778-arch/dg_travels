@@ -10,7 +10,7 @@ import Book from './Book'
 import Auth from './Auth'
 import Reset from './Reset'
 import VerifyOtp from './VerifyOtp'
-import Dashboard from './Dashboard'
+import DashboardNew from './DashboardNew'
 import MyBookings from './MyBookings'
 import PayReturn from './PayReturn'
 import Receipt from './Receipt'
@@ -29,6 +29,7 @@ import AdminBookings from './AdminBookings'
 import AdminParcels from './AdminParcels'
 import AdminRefunds from './AdminRefunds'
 import OperatorSignup from './OperatorSignup'
+
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const admin = useAdmin()
@@ -83,7 +84,7 @@ export default function App() {
           <Route path="/login" element={<Auth />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardNew />} />
           <Route path="/operator/signup" element={<OperatorSignup />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/pay/return" element={<PayReturn />} />
@@ -107,4 +108,4 @@ export default function App() {
       </main>
     </>
   )
-            }
+  }
