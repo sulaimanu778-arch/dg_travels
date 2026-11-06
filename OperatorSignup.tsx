@@ -53,8 +53,7 @@ export default function OperatorSignup() {
       <section className="card">
         <h1>Application sent</h1>
         <p>
-          Thank you. Katsina Express will check your company and approve it. After approval
-          you can add your vehicles and trips.
+          Thank you. DG Travels will check your company and approve it.
         </p>
         <p><Link to="/dashboard">Back to dashboard</Link></p>
       </section>
