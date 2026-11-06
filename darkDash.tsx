@@ -3,8 +3,8 @@ export const DARK_CSS = `
 .dk {
   min-height: 100vh;
   padding: 24px 16px 120px;
-  background: #f8f9f6;
-  color: #102b35;
+  background: #101426;
+  color: #f4f5ff;
   font-family: Arial, sans-serif;
   box-sizing: border-box;
 }
@@ -14,17 +14,16 @@ export const DARK_CSS = `
   text-decoration: none;
 }
 
-/* Welcome section */
 .dk-hero {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 25px 22px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #102b35, #075b50);
+  background: linear-gradient(135deg, #242b55, #493b83);
   color: #fff;
-  box-shadow: 0 8px 22px rgba(16,43,53,.16);
-  border: 1px solid rgba(245,184,23,.25);
+  box-shadow: 0 8px 25px rgba(0,0,0,.25);
+  border: 1px solid #6255a5;
 }
 
 .dk-av {
@@ -34,15 +33,14 @@ export const DARK_CSS = `
   border-radius: 20px;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #ffd65a, #e5a900);
-  color: #102b35;
+  background: linear-gradient(145deg, #8b7cff, #5545bd);
+  color: #fff;
   font-size: 27px;
   font-weight: 900;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
 }
 
 .dk-hi {
-  color: #e1eee9;
+  color: #c9c9e9;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -52,10 +50,8 @@ export const DARK_CSS = `
   font-weight: 900;
   margin: 4px 0;
   color: #fff;
-  letter-spacing: -.5px;
 }
 
-/* Search bar */
 .dk-search {
   display: flex;
   justify-content: space-between;
@@ -63,15 +59,14 @@ export const DARK_CSS = `
   padding: 20px;
   margin: 22px 0 14px;
   border-radius: 17px;
-  background: #fff;
-  color: #102b35;
-  border: 1px solid #e5e8e2;
-  box-shadow: 0 4px 14px rgba(16,43,53,.07);
+  background: #202640;
+  color: #fff;
+  border: 1px solid #343d61;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
   font-size: 16px;
   font-weight: 600;
 }
 
-/* Support status */
 .dk-pill {
   display: block;
   padding: 14px;
@@ -82,27 +77,24 @@ export const DARK_CSS = `
 }
 
 .dk-pill.open {
-  background: #e7f5ec;
-  color: #08734c;
-  border: 1px solid #c9e9d5;
+  background: #153d38;
+  color: #76e3b5;
+  border: 1px solid #286c5b;
 }
 
 .dk-pill.shut {
-  background: #fff5d9;
-  color: #946500;
-  border: 1px solid #f3dfaa;
+  background: #40351f;
+  color: #ffd47b;
+  border: 1px solid #725b30;
 }
 
-/* Section headings */
 .dk h2 {
   font-size: 20px;
   font-weight: 900;
   margin: 28px 0 15px;
-  color: #102b35;
-  letter-spacing: -.3px;
+  color: #fff;
 }
 
-/* Service cards */
 .dk-tiles {
   display: grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
@@ -116,21 +108,19 @@ export const DARK_CSS = `
   flex-direction: column;
   justify-content: center;
   border-radius: 19px;
-  background: #fff;
-  color: #102b35;
+  background: #202640;
+  color: #f5f5ff;
   font-weight: 800;
   font-size: 15px;
-  border: 1px solid #e8e9e3;
-  border-bottom: 4px solid #f5b817;
-  box-shadow: 0 4px 12px rgba(16,43,53,.055);
-  transition: transform .2s ease, box-shadow .2s ease;
+  border: 1px solid #343d61;
+  box-shadow: 0 5px 16px rgba(0,0,0,.2);
+  transition: transform .2s ease;
 }
 
 .dk-tile:active {
   transform: scale(.97);
 }
 
-/* Service icons */
 .dk-ico {
   width: 55px;
   height: 55px;
@@ -139,30 +129,28 @@ export const DARK_CSS = `
   border-radius: 16px;
   margin-bottom: 14px;
   font-size: 27px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.10);
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
 }
 
-/* Waybill promotion */
 .dk-promo {
   display: block;
   margin-top: 23px;
   padding: 24px 20px;
   border-radius: 19px;
-  background: linear-gradient(120deg, #08734c, #075b50);
+  background: linear-gradient(120deg, #35316c, #51418b);
   color: #fff;
-  border: 1px solid rgba(245,184,23,.35);
-  box-shadow: 0 7px 18px rgba(8,115,76,.13);
+  border: 1px solid #7165b7;
+  box-shadow: 0 7px 18px rgba(0,0,0,.2);
 }
 
-/* Account section */
 .dk-acct {
   margin-top: 28px;
   padding: 17px;
-  color: #52636a;
+  color: #b7bdd7;
   font-size: 13px;
   line-height: 1.7;
   overflow-wrap: anywhere;
-  border-top: 1px solid #e5e9e4;
+  border-top: 1px solid #343d61;
 }
 
 .dk-out {
@@ -170,13 +158,12 @@ export const DARK_CSS = `
   padding: 12px 22px;
   border: 0;
   border-radius: 11px;
-  background: #f5b817;
-  color: #102b35;
+  background: #7565db;
+  color: #fff;
   font-weight: 900;
   font-size: 14px;
 }
 
-/* Recent bookings */
 .dk-rec {
   display: grid;
   gap: 13px;
@@ -185,17 +172,12 @@ export const DARK_CSS = `
 .dk-card {
   display: block;
   padding: 18px;
-  border: 1px solid #e4e9e3;
-  border-left: 5px solid #f5b817;
+  border: 1px solid #343d61;
+  border-left: 5px solid #8877ff;
   border-radius: 17px;
-  background: #fff;
-  color: #102b35;
-  box-shadow: 0 4px 12px rgba(16,43,53,.055);
-  transition: transform .2s ease;
-}
-
-.dk-card:active {
-  transform: scale(.98);
+  background: #202640;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
 }
 
 .dk-top {
@@ -209,7 +191,7 @@ export const DARK_CSS = `
 .dk-top strong {
   font-size: 15px;
   line-height: 1.5;
-  color: #102b35;
+  color: #fff;
 }
 
 .dk-badge {
@@ -218,13 +200,11 @@ export const DARK_CSS = `
   border-radius: 20px;
   font-size: 11px;
   font-weight: 800;
-  background: #fff3ce;
-  color: #946500;
 }
 
 .dk-card small {
   display: block;
-  color: #63737a;
+  color: #b7bdd7;
   font-size: 12px;
   margin-bottom: 13px;
 }
@@ -235,39 +215,37 @@ export const DARK_CSS = `
   align-items: center;
   gap: 10px;
   padding-top: 12px;
-  border-top: 1px solid #edf0eb;
-  color: #63737a;
+  border-top: 1px solid #343d61;
+  color: #b7bdd7;
   font-size: 12px;
 }
 
 .dk-foot b {
-  color: #08734c;
+  color: #82d8ff;
   font-size: 17px;
 }
 
 .dk-empty {
   padding: 22px;
   border-radius: 16px;
-  background: #fff;
-  border: 1px dashed #d4d9ce;
-  color: #63737a;
+  background: #202640;
+  border: 1px dashed #596187;
+  color: #c5c9df;
   line-height: 1.7;
 }
 
-/* Tablet and desktop */
 @media(min-width:700px) {
   .dk {
-    max-width: 850px;
+    max-width: 1100px;
     margin: auto;
     padding-top: 35px;
   }
 
   .dk-tiles {
-    grid-template-columns: repeat(3,minmax(0,1fr));
+    grid-template-columns: repeat(4,minmax(0,1fr));
   }
 }
 
-/* Small mobile screens */
 @media(max-width:380px) {
   .dk {
     padding-left: 12px;
