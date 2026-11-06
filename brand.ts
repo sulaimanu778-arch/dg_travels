@@ -1,2 +1,2 @@
-export const BRAND = 'Katsina Express'
+export const BRAND = 'DG Travels'
 export const TAGLINE = 'Travel • Deliver • Connect'
