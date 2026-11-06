@@ -9,6 +9,94 @@ import { useAdmin } from './useAdmin'
 import RecentBookings from './RecentBookings'
 import BottomNav from './BottomNav'
 
+type IconName =
+  | 'dashboard'
+  | 'bus'
+  | 'package'
+  | 'ticket'
+  | 'headset'
+  | 'shield'
+  | 'search'
+  | 'arrow'
+  | 'logout'
+  | 'plane'
+  | 'clock'
+
+function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
+  const common = {
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  }
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      {...common}
+    >
+      {name === 'dashboard' && <>
+        <rect x="3" y="3" width="8" height="8" rx="1.5" />
+        <rect x="13" y="3" width="8" height="5" rx="1.5" />
+        <rect x="13" y="10" width="8" height="11" rx="1.5" />
+        <rect x="3" y="13" width="8" height="8" rx="1.5" />
+      </>}
+      {name === 'bus' && <>
+        <rect x="3" y="4" width="18" height="15" rx="3" />
+        <path d="M3 11h18M7 4v7m10-7v7M7 19v2m10-2v2" />
+        <circle cx="7.5" cy="15" r="1" />
+        <circle cx="16.5" cy="15" r="1" />
+      </>}
+      {name === 'package' && <>
+        <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+        <path d="M3 8v9l9 5 9-5V8M12 13v9M7.5 5.5l9 5" />
+      </>}
+      {name === 'ticket' && <>
+        <path d="M4 5h16v4a3 3 0 0 0 0 6v4H4v-4a3 3 0 0 0 0-6V5Z" />
+        <path d="M12 7v2m0 3v2m0 3v1" />
+      </>}
+      {name === 'headset' && <>
+        <path d="M3 13v-2a9 9 0 0 1 18 0v2" />
+        <rect x="3" y="12" width="4" height="7" rx="2" />
+        <rect x="17" y="12" width="4" height="7" rx="2" />
+        <path d="M17 19a5 5 0 0 1-5 3h-2" />
+      </>}
+      {name === 'shield' && <>
+        <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+        <path d="m9 12 2 2 4-4" />
+      </>}
+      {name === 'search' && <>
+        <circle cx="10.8" cy="10.8" r="6.8" />
+        <path d="m16 16 5 5" />
+      </>}
+      {name === 'arrow' && <path d="M5 12h14m-6-6 6 6-6 6" />}
+      {name === 'logout' && <>
+        <path d="M10 17l5-5-5-5m5 5H3" />
+        <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+      </>}
+      {name === 'plane' && <>
+        <path d="m3 11 18-8-7 18-3-8-8-2Z" />
+        <path d="m11 13 5-5" />
+      </>}
+      {name === 'clock' && <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </>}
+    </svg>
+  )
+}
+
+const SERVICE_ICONS: IconName[] = [
+  'bus',
+  'package',
+  'ticket',
+  'headset',
+]
+
 export default function Dashboard() {
   const nav = useNavigate()
   const [user, setUser] = useState<User | null>(null)
@@ -50,41 +138,43 @@ export default function Dashboard() {
         <div className="dk-side-label">MAIN MENU</div>
 
         <Link to="/dashboard" className="dk-side-link active">
-          <span>⌂</span> Dashboard
+          <Icon name="dashboard" /> Dashboard
         </Link>
 
         <Link to="/" className="dk-side-link">
-          <span>🚌</span> Passenger travel
+          <Icon name="bus" /> Passenger travel
         </Link>
 
         <Link to="/waybill" className="dk-side-link">
-          <span>📦</span> Waybill delivery
+          <Icon name="package" /> Waybill delivery
         </Link>
 
         <Link to="/my-bookings" className="dk-side-link">
-          <span>🎫</span> My bookings
+          <Icon name="ticket" /> My bookings
         </Link>
 
         <Link to="/my-waybills" className="dk-side-link">
-          <span>🚚</span> My waybills
+          <Icon name="package" /> My waybills
         </Link>
 
         <Link to="/support" className="dk-side-link">
-          <span>🎧</span> Customer support
+          <Icon name="headset" /> Customer support
         </Link>
 
         {admin === 'yes' && (
           <>
             <div className="dk-side-label">MANAGEMENT</div>
             <Link to="/admin" className="dk-side-link">
-              <span>🛡️</span> Admin panel
+              <Icon name="shield" /> Admin panel
             </Link>
           </>
         )}
 
         <div className="dk-sidebar-bottom">
           <div className="dk-side-user">
-            <div className="dk-av">{username.charAt(0).toUpperCase()}</div>
+            <div className="dk-av">
+              {username.charAt(0).toUpperCase()}
+            </div>
             <div>
               <strong>{username}</strong>
               <small>DG Travels account</small>
@@ -92,7 +182,7 @@ export default function Dashboard() {
           </div>
 
           <button className="dk-side-logout" onClick={logout}>
-            ↪ Log out
+            <Icon name="logout" size={17} /> Log out
           </button>
         </div>
       </aside>
@@ -100,8 +190,8 @@ export default function Dashboard() {
       <main className="dk-main">
         <header className="dk-topbar">
           <div>
-            <div className="dk-hi">Your travel dashboard</div>
-            <strong>Welcome back, {username}!</strong>
+            <div className="dk-hi">YOUR TRAVEL DASHBOARD</div>
+            <strong>Welcome back, {username}</strong>
           </div>
 
           <div className="dk-top-avatar">
@@ -112,23 +202,27 @@ export default function Dashboard() {
         <section className="dk-welcome">
           <div>
             <div className="dk-eyebrow">DG TRAVELS · KATSINA</div>
-            <h1>{greeting()}, {username} 👋</h1>
+            <h1>{greeting()}, {username}</h1>
             <p>
               Where would you like to go today?
               Book your journey or send a parcel with ease.
             </p>
 
             <Link to="/" className="dk-primary-btn">
-              Explore journeys <span>→</span>
+              Explore journeys <Icon name="arrow" size={17} />
             </Link>
           </div>
 
-          <div className="dk-welcome-art">🚌</div>
+          <div className="dk-welcome-art">
+            <Icon name="bus" size={90} />
+          </div>
         </section>
 
         <section className="dk-search-panel">
           <div>
-            <span className="dk-search-icon">⌕</span>
+            <span className="dk-search-icon">
+              <Icon name="search" size={22} />
+            </span>
             <div>
               <strong>Plan your next journey</strong>
               <small>Find available passenger trips from Katsina</small>
@@ -136,7 +230,7 @@ export default function Dashboard() {
           </div>
 
           <Link to="/" className="dk-search-button">
-            Search trips →
+            Search trips <Icon name="arrow" size={16} />
           </Link>
         </section>
 
@@ -149,26 +243,27 @@ export default function Dashboard() {
           </div>
 
           <div className="dk-tiles">
-            {TILES.map(t => (
+            {TILES.map((t, index) => (
               <Link key={t.to} to={t.to} className="dk-tile">
-                <div
-                  className="dk-ico"
-                  style={{
-                    background: `linear-gradient(145deg, ${t.from}, ${t.to2})`
-                  }}
-                >
-                  {t.emoji}
+                <div className="dk-ico">
+                  <Icon name={SERVICE_ICONS[index]} size={25} />
                 </div>
                 <strong>{t.label}</strong>
-                <span className="dk-tile-arrow">Explore →</span>
+                <span className="dk-tile-arrow">
+                  Explore <Icon name="arrow" size={14} />
+                </span>
               </Link>
             ))}
 
             {admin === 'yes' && (
               <Link to="/admin" className="dk-tile">
-                <div className="dk-ico dk-admin-icon">🛡️</div>
+                <div className="dk-ico">
+                  <Icon name="shield" size={25} />
+                </div>
                 <strong>Admin panel</strong>
-                <span className="dk-tile-arrow">Manage →</span>
+                <span className="dk-tile-arrow">
+                  Manage <Icon name="arrow" size={14} />
+                </span>
               </Link>
             )}
           </div>
@@ -183,10 +278,12 @@ export default function Dashboard() {
               from Katsina to your destination.
             </p>
             <Link to="/" className="dk-feature-btn">
-              Book a journey →
+              Book a journey <Icon name="arrow" size={17} />
             </Link>
           </div>
-          <div className="dk-feature-art">✈️</div>
+          <div className="dk-feature-art">
+            <Icon name="plane" size={65} />
+          </div>
         </section>
 
         <section className="dk-section">
@@ -196,7 +293,7 @@ export default function Dashboard() {
               <p>Your latest bookings and deliveries</p>
             </div>
             <Link to="/history" className="dk-view-all">
-              View history →
+              View history <Icon name="arrow" size={14} />
             </Link>
           </div>
 
@@ -210,12 +307,14 @@ export default function Dashboard() {
         </Link>
 
         <Link to="/operator/signup" className="dk-operator">
-          <span className="dk-operator-icon">🚌</span>
+          <span className="dk-operator-icon">
+            <Icon name="bus" size={28} />
+          </span>
           <span>
             <strong>Own a transport company?</strong>
             <small>Partner with DG Travels and register your company.</small>
           </span>
-          <b>→</b>
+          <b><Icon name="arrow" size={20} /></b>
         </Link>
 
         <footer className="dk-footer">
@@ -227,5 +326,5 @@ export default function Dashboard() {
       <BottomNav />
     </section>
   )
-          }
-            
+      }
+          
