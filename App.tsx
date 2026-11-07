@@ -103,9 +103,14 @@ export default function App() {
           <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/parcels" element={<AdminParcels />} />
           <Route path="/admin/refunds" element={<AdminRefunds />} />
-          <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} />
-        </Routes>
+          <Route path="*" element={<p>Page not found. <Link to="/">Go to the homepage</Link></p>} /
+                  </Routes>
       </main>
+      <footer style={{ textAlign: 'center', padding: '24px 16px', fontSize: '0.9rem', opacity: 0.85 }}>
+        <p style={{ margin: '4px 0' }}>
+          DG Travels is part of{' '}
+          <a href="https://dg-group-website.vercel.app" style={{ fontWeight: 600 }}>DG Group</a>.
+        </p>
+        <p style={{ margin: '4px 0' }}>&copy; 2026 DG Group. All rights reserved.</p>
+      </footer>
     </>
-  )
-  }
