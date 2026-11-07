@@ -66,7 +66,7 @@ export default function DashboardNew() {
 
   return (
     <section style={{ maxWidth: 640, margin: '0 auto', paddingBottom: 96 }}>
-      <NdHeader name={name} />
+      <NdHeader name={name} onLogout={logout} />
       <NdFind />
 
       <h2 style={{ fontSize: 17, margin: '22px 4px 10px', color: C.navy }}>Services</h2>
@@ -94,14 +94,7 @@ export default function DashboardNew() {
         ))}
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: 24 }}>
-        <button onClick={logout} style={{
-          padding: '0.5rem 1.4rem', borderRadius: 999, border: '1px solid #d1d5db',
-          background: '#fff', color: '#b91c1c', fontWeight: 600, cursor: 'pointer',
-        }}>Log out</button>
-      </div>
-
-      <p style={{ textAlign: 'center', fontSize: '0.9rem', margin: '20px 0 0', opacity: 0.85 }}>
+      <p style={{ textAlign: 'center', fontSize: '0.9rem', margin: '24px 0 0', opacity: 0.85 }}>
         DG Travels is part of{' '}
         <a href="https://dg-group-website.vercel.app" style={{ fontWeight: 600 }}>DG Group</a>.
       </p>
@@ -109,4 +102,4 @@ export default function DashboardNew() {
       <NdNav />
     </section>
   )
-                           }
+                                                                        }
