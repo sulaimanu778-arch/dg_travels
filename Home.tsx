@@ -76,6 +76,11 @@ export default function Home() {
           <button className="primary" disabled={!to}>Search Journeys</button>
         </form>
       </div>
+
+      <p style={{ textAlign: 'center', fontSize: '0.9rem', margin: '24px 0 90px', opacity: 0.85 }}>
+        DG Travels is part of{' '}
+        <a href="https://dg-group-website.vercel.app" style={{ fontWeight: 600 }}>DG Group</a>.
+      </p>
     </section>
   )
-}
+      }
