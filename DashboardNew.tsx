@@ -100,7 +100,13 @@ export default function DashboardNew() {
           background: '#fff', color: '#b91c1c', fontWeight: 600, cursor: 'pointer',
         }}>Log out</button>
       </div>
+
+      <p style={{ textAlign: 'center', fontSize: '0.9rem', margin: '20px 0 0', opacity: 0.85 }}>
+        DG Travels is part of{' '}
+        <a href="https://dg-group-website.vercel.app" style={{ fontWeight: 600 }}>DG Group</a>.
+      </p>
+
       <NdNav />
     </section>
   )
-      }
+                           }
